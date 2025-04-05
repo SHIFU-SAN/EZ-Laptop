@@ -1,25 +1,21 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const CommentSchema = new Schema({
+const DiscountForLaptopSchema = new Schema({
     LaptopID: {
         type: String,
         required: true,
         ref: 'Laptop',
         index: 1
     },
-    UserID: {
+    DiscountID: {
         type: String,
         required: true,
-        ref: 'Account',
+        ref: 'Discount',
         index: 1
-    },
-    Content: {
-        type: String,
-        required: true
     }
 });
 
-const Comment = mongoose.model('Comment', CommentSchema);
+const Discount = mongoose.model('Discount', DiscountForLaptopSchema);
 
-module.exports = Comment;
+module.exports = Discount;
