@@ -16,11 +16,6 @@ const Intel_schema = new Schema({
 });
 
 const CPU_schema = new Schema({
-    _id: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        unique: true
-    },
     Branch: {
         type: String,
         required: true

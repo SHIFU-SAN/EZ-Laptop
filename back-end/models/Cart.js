@@ -9,11 +9,6 @@ const {
 } = require("./ReusableSchema");
 
 const CartSchema = new Schema({
-    _id: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        unique: true
-    },
     CustomerID: {
         type: Schema.Types.ObjectId,
         ref: 'Account',

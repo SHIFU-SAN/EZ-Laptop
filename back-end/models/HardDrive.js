@@ -4,11 +4,6 @@ const Schema = mongoose.Schema;
 const ProductImageSchema = require("./ReusableSchema");
 
 const HardDriveSchema = new Schema({
-    _id: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        unique: true
-    },
     Branch: String,
     Name: String,
     Type: {

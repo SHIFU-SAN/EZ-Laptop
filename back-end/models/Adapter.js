@@ -4,11 +4,6 @@ const Schema = mongoose.Schema;
 const ProductImageSchema = require("./ReusableSchema");
 
 const AdapterSchema = new Schema({
-    _id: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        unique: true
-    },
     Branch: String,
     Name: {
         type: String,

@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const WarrantyCardSchema = new Schema({
-    _id: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        unique: true
-    },
     LaptopID: {
         type: Schema.Types.ObjectId,
         ref: 'Laptop',
@@ -24,11 +19,11 @@ const WarrantyCardSchema = new Schema({
         ref: 'Adapter',
     },
     Errors: [{
-        _id: {
+        ErrorID: {
             type: Schema.Types.ObjectId,
             required: true
         },
-        content: {
+        Content: {
             type: String,
             required: true
         }

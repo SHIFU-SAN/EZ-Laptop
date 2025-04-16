@@ -38,8 +38,9 @@ const AdapterOrderSchema = new Schema({
 });
 
 const ProductImageSchema = new Schema({
-    _id: {
+    ImageID: {
         type: Schema.Types.ObjectId,
+        required: true,
         unique: true
     },
     Link: String

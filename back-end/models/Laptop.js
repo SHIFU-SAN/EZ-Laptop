@@ -1,14 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ProductImageSchema = require("./ReusableProductImageSchema");
+const ProductImageSchema = require("./ReusableSchema");
 
 const LaptopSchema = new Schema({
-    _id: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        unique: true
-    },
     Branch: {
         type: String,
         required: true
