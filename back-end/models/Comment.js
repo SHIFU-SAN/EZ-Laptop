@@ -2,17 +2,32 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const CommentSchema = new Schema({
-    LaptopID: {
-        type: String,
+    _id: {
+        type: Schema.Types.ObjectId,
         required: true,
-        ref: 'Laptop',
-        index: 1
+        unique: true
     },
     UserID: {
         type: String,
         required: true,
         ref: 'Account',
         index: 1
+    },
+    LaptopID: {
+        type: Schema.Types.ObjectId,
+        ref: 'Laptop'
+    },
+    RAM_ID: {
+        type: Schema.Types.ObjectId,
+        ref: 'RAM'
+    },
+    HardDriveID: {
+        type: Schema.Types.ObjectId,
+        ref: 'HardDrive'
+    },
+    Adapter: {
+        type: Schema.Types.ObjectId,
+        ref: 'Adapter'
     },
     Content: {
         type: String,

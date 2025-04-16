@@ -1,17 +1,30 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const {
+    LaptopOrderSchema,
+    RamOrderSchema,
+    HardDriveOrderSchema,
+    AdapterOrderSchema
+} = require("./ReusableSchema");
+
 const BillSchema = new Schema({
-    ID: {
-        type: String,
+    _id: {
+        type: Schema.Types.ObjectId,
         required: true,
         unique: true
     },
     UserID: {
-        type: String,
-        required: true,
-        ref: 'Account'
+        type: Schema.Types.ObjectId,
+        ref: 'Account',
+        required: true
     },
+    Products: [{
+        Laptops: LaptopOrderSchema,
+        RAMs: RamOrderSchema,
+        HardDrives: HardDriveOrderSchema,
+        Adapters: AdapterOrderSchema
+    }],
     Total: Double
 });
 

@@ -1,9 +1,23 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const CPU = new Schema({
-    ID: {
-        type: String,
+const AMD_schema = new Schema({
+    BaseClock: Double,
+    BoostClock: Double
+});
+
+const Intel_schema = new Schema({
+    NumberPcores: Int32,
+    BaseClockPcores: Double,
+    BoostClockPcores: Double,
+    NumberEcores: Int32,
+    BaseClockEcores: Double,
+    BoostEcoreEcores: Double
+});
+
+const CPU_schema = new Schema({
+    _id: {
+        type: Schema.Types.ObjectId,
         required: true,
         unique: true
     },
@@ -42,5 +56,11 @@ const CPU = new Schema({
     MaxTDP: {
         type: Int32,
         required: true
-    }
-})
+    },
+    AMD: AMD_schema,
+    Intel: Intel_schema
+});
+
+const CPU = mongoose.model('CPU', CPU_schema);
+
+module.exports = CPU;

@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const GPU_Schema = new Schema({
-    ID: {
-        type: String,
+    _id: {
+        type: Schema.Types.ObjectId,
         required: true,
         unique: true
     },

@@ -2,15 +2,14 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const DiscountSchema = new Schema({
-    ID: {
-        type: String,
+    _id: {
+        type: Schema.Types.ObjectId,
         required: true,
         unique: true
     },
     LaptopID: {
-        type: String,
-        required: true,
-        ref: 'Laptop'
+        type: Schema.Types.ObjectId,
+        required: true
     },
     Start: {
         type: Date,
@@ -24,11 +23,13 @@ const DiscountSchema = new Schema({
         type: Double,
         required: true
     },
-    EventID: {
-        type: String,
-        required: true,
-        ref: 'Event'
-    }
+    Event: String,
+    Laptops: [{
+        LaptopID: {
+            type: Schema.Types.ObjectId,
+            ref: 'Laptop'
+        }
+    }]
 });
 
 const Discount = mongoose.model('Discount', DiscountSchema);
