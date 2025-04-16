@@ -37,9 +37,18 @@ const AdapterOrderSchema = new Schema({
     Quantity: Int32
 });
 
+const ProductImageSchema = new Schema({
+    _id: {
+        type: Schema.Types.ObjectId,
+        unique: true
+    },
+    Link: String
+});
+
 module.exports = {
     LaptopOrderSchema,
     RamOrderSchema,
     HardDriveOrderSchema,
-    AdapterOrderSchema
+    AdapterOrderSchema,
+    ProductImageSchema
 }
