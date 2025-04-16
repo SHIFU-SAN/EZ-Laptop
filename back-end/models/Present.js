@@ -2,15 +2,37 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const PresentSchema = new Schema({
-    ID: {
-        type: String,
-        required: true,
+    _id: {
+        type: Schema.Types.ObjectId,
+        require: true,
         unique: true
     },
     LaptopID: {
-        type: String,
-        required: true,
-        ref: 'Laptop'
+        type: Schema.Types.ObjectId,
+        ref: 'Laptop',
+        required: true
+    },
+    Products: [{
+        _id: {
+            type: Schema.Types.ObjectId,
+            required: true
+        },
+        Name: {
+            type: String,
+            required: true
+        }
+    }],
+    Start: {
+        type: Date,
+        required: true
+    },
+    End: {
+        type: Date,
+        required: true
+    },
+    Status: {
+        type: Boolean,
+        default: true
     }
 });
 

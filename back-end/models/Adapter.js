@@ -34,7 +34,11 @@ const AdapterSchema = new Schema({
             ref: 'Laptop',
             required: true
         }
-    }]
+    }],
+    Status: {
+        type: Boolean,
+        default: true
+    }
 });
 
 const Adapter = mongoose.model('Adapter', AdapterSchema);

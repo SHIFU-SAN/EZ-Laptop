@@ -29,7 +29,11 @@ const DiscountSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Laptop'
         }
-    }]
+    }],
+    Status: {
+        type: Boolean,
+        default: true
+    }
 });
 
 const Discount = mongoose.model('Discount', DiscountSchema);

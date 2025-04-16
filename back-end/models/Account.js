@@ -7,6 +7,10 @@ const AccountSchema = new Schema({
         required: true,
         unique: true
     },
+    PhoneNumber: {
+        type: String,
+        required: true
+    },
     Email: {
         type: String,
         required: true

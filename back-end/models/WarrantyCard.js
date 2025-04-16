@@ -1,21 +1,15 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const CommentSchema = new Schema({
+const WarrantyCardSchema = new Schema({
     _id: {
         type: Schema.Types.ObjectId,
         required: true,
         unique: true
     },
-    UserID: {
-        type: String,
-        required: true,
-        ref: 'Account',
-        index: 1
-    },
     LaptopID: {
         type: Schema.Types.ObjectId,
-        ref: 'Laptop'
+        ref: 'Laptop',
     },
     RAM_ID: {
         type: Schema.Types.ObjectId,
@@ -23,23 +17,28 @@ const CommentSchema = new Schema({
     },
     HardDriveID: {
         type: Schema.Types.ObjectId,
-        ref: 'HardDrive'
+        ref: 'HardDrive',
     },
-    Adapter: {
+    AdapterID: {
         type: Schema.Types.ObjectId,
-        ref: 'Adapter'
+        ref: 'Adapter',
     },
-    Content: {
-        type: String,
-        required: true
-    },
-    Time: {
+    Errors: [{
+        _id: {
+            type: Schema.Types.ObjectId,
+            required: true
+        },
+        content: {
+            type: String,
+            required: true
+        }
+    }],
+    AppointmentDate: {
         type: Date,
-        default: Date.now,
         required: true
     }
 });
 
-const Comment = mongoose.model('Comment', CommentSchema);
+const WarrantyCard = mongoose.model("WarrantyCard", WarrantyCardSchema);
 
-module.exports = Comment;
+module.exports = WarrantyCard;

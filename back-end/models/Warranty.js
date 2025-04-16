@@ -1,17 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const CommentSchema = new Schema({
+const GuaranteeSchema = new Schema({
     _id: {
         type: Schema.Types.ObjectId,
         required: true,
         unique: true
-    },
-    UserID: {
-        type: String,
-        required: true,
-        ref: 'Account',
-        index: 1
     },
     LaptopID: {
         type: Schema.Types.ObjectId,
@@ -25,21 +19,28 @@ const CommentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'HardDrive'
     },
-    Adapter: {
+    AdapterID: {
         type: Schema.Types.ObjectId,
         ref: 'Adapter'
     },
-    Content: {
-        type: String,
+    CustomerID: {
+        type: Schema.Types.ObjectId,
+        ref: 'Account'
+    },
+    Start: {
+        type: Date,
         required: true
     },
-    Time: {
+    End: {
         type: Date,
-        default: Date.now,
         required: true
+    },
+    Status: {
+        type: Boolean,
+        default: true
     }
 });
 
-const Comment = mongoose.model('Comment', CommentSchema);
+const Warranty = mongoose.model('Warranty', GuaranteeSchema);
 
-module.exports = Comment;
+module.exports = Warranty;

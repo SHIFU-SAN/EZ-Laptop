@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const ProductImageSchema = require("./ReusableProductImageSchema");
+
 const LaptopSchema = new Schema({
-    ID: {
-        type: String,
+    _id: {
+        type: Schema.Types.ObjectId,
         required: true,
         unique: true
     },
@@ -16,37 +18,45 @@ const LaptopSchema = new Schema({
         required: true
     },
     CPU_ID: {
-        type: String,
-        required: true,
-        ref: 'CPU'
+        type: Schema.Types.ObjectId,
+        ref: 'CPU',
+        required: true
     },
     GPU_ID: {
-        type: String,
-        required: true,
-        ref: 'GPU'
+        type: Schema.Types.ObjectId,
+        ref: 'GPU',
+        required: true
     },
     ScreenID: {
-        type: String,
-        required: true,
-        ref: 'Screen'
+        type: Schema.Types.ObjectId,
+        ref: 'Screen',
+        required: true
     },
-    BatteryID: {
+    Battery: {
         type: String,
-        required: true,
-        ref: 'Battery'
+        required: true
     },
     AdapterID: {
-        type: String,
-        required: true,
-        ref: 'Adapter'
+        type: Schema.Types.ObjectId,
+        ref: 'Adapter',
+        required: true
     },
     TDP: Int32,
     Weight: {
         type: Double,
         required: true
     },
+    Warranty: {
+        type: Int32,
+        required: true
+    },
     Price: Double,
-    Quantity: Int32
+    Quantity: Int32,
+    Images: [ProductImageSchema],
+    Status: {
+        type: Boolean,
+        default: true
+    }
 });
 
 const Laptop = mongoose.model('Laptop', LaptopSchema);
