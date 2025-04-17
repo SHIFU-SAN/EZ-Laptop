@@ -13,21 +13,14 @@ const AdapterSchema = new Schema({
         type: Int32,
         required: true
     },
-    OutputVoltage: {
-        type: Double,
-        required: true
-    },
-    OutputCurrent: {
-        type: Double,
-        required: true
-    },
+    OutputVoltage: Double,
+    OutputCurrent: Double,
     Price: Double,
     Images: [ProductImageSchema],
     CompatibleLaptops: [{
         LaptopID: {
             type: Schema.Types.ObjectId,
-            ref: 'Laptop',
-            required: true
+            ref: 'Laptop'
         }
     }],
     Status: {
