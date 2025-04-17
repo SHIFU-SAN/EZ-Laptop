@@ -3,6 +3,8 @@ const Schema = mongoose.Schema;
 
 const ProductImageSchema = require("./ReusableSchema");
 
+const LaptopFK_schema = require("./ReusableSchema");
+
 const AdapterSchema = new Schema({
     Branch: String,
     Name: {
@@ -16,13 +18,14 @@ const AdapterSchema = new Schema({
     OutputVoltage: Double,
     OutputCurrent: Double,
     Price: Double,
-    Images: [ProductImageSchema],
-    CompatibleLaptops: [{
-        LaptopID: {
-            type: Schema.Types.ObjectId,
-            ref: 'Laptop'
-        }
-    }],
+    Images: {
+        type: [ProductImageSchema],
+        default: []
+    },
+    CompatibleLaptops: {
+        type: [LaptopFK_schema],
+        default: []
+    },
     Status: {
         type: Boolean,
         default: true
