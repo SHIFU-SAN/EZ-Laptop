@@ -1,58 +1,62 @@
-const {Account} = require("../models/Account");
+const Account = require("../models/Account");
 
-async function addAccount(details) {
-    let NewAccount = new Account({
-        CustomerID: details.CustomerID,
-        Username: details.Username,
-        Password: details.Password,
-        Name: details.Name,
-        Avatar: details.Avatar,
-        Permission: details.Permission
-    });
-    await NewAccount.save();
-    return NewAccount;
-}
+class AccountServices {
+    static async createAccount(info) {
+        const NewAccount = new Account({
+            PhoneNumber: info.PhoneNumber,
+            Email: info.Email,
+            Username: info.Username,
+            Password: info.Password,
+            Name: info.Name
+        });
 
-async function getAllAccounts() {
-    let result = await Account.find();
-    return result ? result : null;
-}
-
-async function getAccountByID(id) {
-    let result = await Account.findOne({CustomerID: id});
-    return result ? result : null;
-}
-
-async function updateAccount(id, new_info) {
-    let result = await Account.findOne({CustomerID: id});
-    if (new_info.Username) {
-        result.Username = new_info.Username;
+        await NewAccount.save();
+        return NewAccount ? NewAccout : null;
     }
-    if (new_info.Password) {
-        result.Password = new_info.Password;
+
+    static async getAccounts() {
+        const Result = await Account.find();
+        return Result ? Result : null;
     }
-    if (new_info.Name) {
-        result.Name = new_info.Name;
+
+    static async getAccountByID(id) {
+        const Result = await Account.findById(id);
+        return Result ? Result : null;
     }
-    if (new_info.Avatar) {
-        result.Avatar = new_info.Avatar;
+
+    static async updateAccount(id, new_info) {
+        let Target = await Account.findById(id);
+
+        if (new_info.PhoneNumber) {
+            Target.PhoneNumber = new_info.PhoneNumber;
+        }
+        if (new_info.Email) {
+            Target.Email = new_info.Email;
+        }
+        if (new_info.Username) {
+            Target.Username = new_info.Username;
+        }
+        if (new_info.Password) {
+            Target.Password = new_info.Password;
+        }
+        if (new_info.Name) {
+            Target.Name = new_info.Name;
+        }
+        if (new_info.Avatar) {
+            Target.Avatar = new_info.Avatar;
+        }
+        if (new_info.Permission) {
+            Target.Permission = new_info.Permission;
+        }
+
+        await Target.save();
+        return Target ? Target : null;
     }
-    if (new_info.Permission) {
-        result.Permission = new_info.Permission;
+
+    static async deleteAccount(id) {
+        const Result = await Account.findByIdAndDelete(id);
+        return Result ? Result : null;
     }
-    result.save();
-    return result ? result : null;
 }
 
-async function deleteAccount(id) {
-    let result = await Account.findOneAndDelete({CustomerID: id});
-    return result ? result : null;
-}
-
-module.exports = {
-    addAccount,
-    getAllAccounts,
-    getAccountByID,
-    updateAccount,
-    deleteAccount
-}
+module.exports = AccountServices;
