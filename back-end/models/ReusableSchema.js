@@ -74,25 +74,6 @@ const AdapterFK_schema = new Schema({
     }
 });
 
-const ProductsFK_schema = new Schema({
-    LaptopID: {
-        type: Schema.Types.ObjectId,
-        ref: 'Laptop'
-    },
-    RAM_ID: {
-        type: Schema.Types.ObjectId,
-        ref: 'RAM'
-    },
-    HardDriveID: {
-        type: Schema.Types.ObjectId,
-        ref: 'HardDrive'
-    },
-    AdapterID: {
-        type: Schema.Types.ObjectId,
-        ref: 'Adapter'
-    }
-});
-
 module.exports = {
     LaptopOrderSchema,
     RAM_OrderSchema,
@@ -102,6 +83,5 @@ module.exports = {
     LaptopFK_schema,
     RAM_FK_schema,
     HardDriveFK_schema,
-    AdapterFK_schema,
-    ProductsFK_schema
+    AdapterFK_schema
 }
