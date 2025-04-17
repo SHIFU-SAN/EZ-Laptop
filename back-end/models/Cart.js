@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const {
     LaptopOrderSchema,
-    RamOrderSchema,
+    RAM_OrderSchema,
     HardDriveOrderSchema,
     AdapterOrderSchema
 } = require("./ReusableSchema");
@@ -15,10 +15,10 @@ const CartSchema = new Schema({
         required: true
     },
     Products: [{
-        Laptops: LaptopOrderSchema,
-        RAMs: RamOrderSchema,
-        HardDrives: HardDriveOrderSchema,
-        Adapters: AdapterOrderSchema
+        LaptopOrder: LaptopOrderSchema,
+        RAM_order: RAM_OrderSchema,
+        HardDriveOrder: HardDriveOrderSchema,
+        AdapterOrder: AdapterOrderSchema
     }],
     Total: Double
 });

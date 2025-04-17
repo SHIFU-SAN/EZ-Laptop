@@ -10,7 +10,7 @@ const LaptopOrderSchema = new Schema({
     Quantity: Int32
 });
 
-const RamOrderSchema = new Schema({
+const RAM_OrderSchema = new Schema({
     RAM_ID: {
         type: Schema.Types.ObjectId,
         ref: 'RAM'
@@ -48,7 +48,7 @@ const ProductImageSchema = new Schema({
 
 module.exports = {
     LaptopOrderSchema,
-    RamOrderSchema,
+    RAM_OrderSchema,
     HardDriveOrderSchema,
     AdapterOrderSchema,
     ProductImageSchema

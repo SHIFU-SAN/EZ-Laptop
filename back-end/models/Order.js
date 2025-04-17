@@ -3,26 +3,25 @@ const Schema = mongoose.Schema;
 
 const {
     LaptopOrderSchema,
-    RAM_OrderSchema,
+    RamOrderSchema,
     HardDriveOrderSchema,
     AdapterOrderSchema
 } = require("./ReusableSchema");
 
-const BillSchema = new Schema({
-    UserID: {
+const OrderSchema = new Schema({
+    CustomerID: {
         type: Schema.Types.ObjectId,
         ref: 'Account',
         required: true
     },
+    ShippingAddress: {
+        type: String,
+        required: true
+    },
     Products: [{
         LaptopOrder: LaptopOrderSchema,
-        RAM_Order: RAM_OrderSchema,
+        RAM_Order: RamOrderSchema,
         HardDriveOrder: HardDriveOrderSchema,
         AdapterOrder: AdapterOrderSchema
-    }],
-    Total: Double
-});
-
-const Bill = mongoose.model('Bill', BillSchema);
-
-module.exports = Bill;
+    }]
+})
