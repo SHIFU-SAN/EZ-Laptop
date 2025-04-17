@@ -20,7 +20,7 @@ const CommentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'HardDrive'
     },
-    Adapter: {
+    AdapterID: {
         type: Schema.Types.ObjectId,
         ref: 'Adapter'
     },
