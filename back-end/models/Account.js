@@ -22,8 +22,14 @@ const AccountSchema = new Schema({
         required: true
     },
     Name: String,
-    Avatar: String,
-    Permission: String
+    Avatar: {
+        type: String,
+        default: "E:\\Workspace\\Project\\EZ-Laptop\\back-end\\Images\\Avatar\\EmptyAvatar.png"
+    },
+    Permission: {
+        type: String,
+        default: "Customer"
+    }
 });
 
 const Account = mongoose.model('Account', AccountSchema);
