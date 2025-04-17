@@ -7,8 +7,9 @@ const PORT = process.env.PORT;
 
 const account_routes = require('./routes/AccountRoutes');
 
-app.use(cors());
-app.use(express.json());
-app.use('/api/account', account_routes);
+app
+    .use(cors())
+    .use(express.json())
+    .use('/api/account', account_routes);
 
 app.listen(PORT, HOST, () => console.log(`Server is running on port ${PORT}...`));
