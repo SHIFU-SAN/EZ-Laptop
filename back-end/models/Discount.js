@@ -4,10 +4,7 @@ const Schema = mongoose.Schema;
 const ProductsFK_schema = require("./ReusableSchema");
 
 const DiscountSchema = new Schema({
-    LaptopID: {
-        type: Schema.Types.ObjectId,
-        required: true
-    },
+    ProductsFK: ProductsFK_schema,
     Start: {
         type: Date,
         required: true
@@ -21,10 +18,6 @@ const DiscountSchema = new Schema({
         required: true
     },
     Event: String,
-    Products: {
-        type: [ProductsFK_schema],
-        default: []
-    },
     Status: {
         type: Boolean,
         default: true

@@ -1,23 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const ProductsFK_schema = require("./ReusableSchema");
+
 const WarrantyCardSchema = new Schema({
-    LaptopID: {
-        type: Schema.Types.ObjectId,
-        ref: 'Laptop',
-    },
-    RAM_ID: {
-        type: Schema.Types.ObjectId,
-        ref: 'RAM'
-    },
-    HardDriveID: {
-        type: Schema.Types.ObjectId,
-        ref: 'HardDrive',
-    },
-    AdapterID: {
-        type: Schema.Types.ObjectId,
-        ref: 'Adapter',
-    },
+    ProductsFK: ProductsFK_schema,
     Errors: [{
         ErrorID: {
             type: Schema.Types.ObjectId,

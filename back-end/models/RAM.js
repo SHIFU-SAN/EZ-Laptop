@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ProductImageSchema = require("./ReusableSchema");
+const {
+    ProductImageSchema,
+    InstallationInfoSchema
+} = require("./ReusableSchema");
 
 const RAM_Schema = new Schema({
     Branch: String,
@@ -18,15 +21,15 @@ const RAM_Schema = new Schema({
         type: Int32,
         required: true
     },
-    InstallationInfos: [{
-        SlotNumber: Int32,
-        LaptopID: {
-            type: Schema.Types.ObjectId,
-            ref: 'Laptop'
-        }
-    }],
+    InstallationInfos: {
+        type: [InstallationInfoSchema],
+        default: []
+    },
     Price: Double,
-    Images: [ProductImageSchema],
+    Images: {
+        type: [ProductImageSchema],
+        default: []
+    },
     Status: {
         type: Boolean,
         default: true

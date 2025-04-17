@@ -1,40 +1,67 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const LaptopOrderSchema = new Schema({
+const LaptopFK_schema = new Schema({
     LaptopID: {
         type: Schema.Types.ObjectId,
-        ref: 'Laptop'
-    },
-    Price: Double,
-    Quantity: Int32
+        ref: 'Laptop',
+        required: true
+    }
 });
 
-const RAM_OrderSchema = new Schema({
+const RAM_FK_schema = new Schema({
     RAM_ID: {
         type: Schema.Types.ObjectId,
-        ref: 'RAM'
-    },
-    Price: Double,
-    Quantity: Int32
+        ref: 'RAM',
+        required: true
+    }
 });
 
-const HardDriveOrderSchema = new Schema({
+const HardDriveFK_schema = new Schema({
     HardDriveID: {
         type: Schema.Types.ObjectId,
-        ref: 'HardDrive'
-    },
-    Price: Double,
-    Quantity: Int32
-})
+        ref: 'HardDrive',
+        required: true
+    }
+});
 
-const AdapterOrderSchema = new Schema({
+const AdapterFK_schema = new Schema({
     AdapterID: {
         type: Schema.Types.ObjectId,
-        ref: 'Adapter'
+        ref: 'Adapter',
+        required: true
+    }
+});
+
+const ProductsFK_schema = new Schema({
+    LaptopID: LaptopFK_schema,
+    RAM_ID: RAM_FK_schema,
+    HardDriveID: HardDriveFK_schema,
+    AdapterID: AdapterFK_schema,
+});
+
+const ProductsOrderSchema = new Schema({
+    LaptopOrder: {
+        LaptopID: LaptopFK_schema,
+        Quantity: Int32
     },
-    Price: Double,
-    Quantity: Int32
+    RAM_Order: {
+        RAM_ID: RAM_FK_schema,
+        Quantity: Int32
+    },
+    HardDriveOrder: {
+        HardDriveID: HardDriveFK_schema,
+        Quantity: Int32
+    },
+    AdapterOrder: {
+        AdapterID: AdapterFK_schema,
+        Quantity: Int32
+    }
+});
+
+const InstallationInfoSchema = new Schema({
+    SlotNumber: Int32,
+    LaptopID: LaptopFK_schema
 });
 
 const ProductImageSchema = new Schema({
@@ -46,62 +73,13 @@ const ProductImageSchema = new Schema({
     Link: String
 });
 
-const LaptopFK_schema = new Schema({
-    LaptopID: {
-        type: Schema.Types.ObjectId,
-        ref: 'Laptop'
-    }
-});
-
-const RAM_FK_schema = new Schema({
-    RAM_ID: {
-        type: Schema.Types.ObjectId,
-        ref: 'RAM'
-    }
-});
-
-const HardDriveFK_schema = new Schema({
-    HardDriveID: {
-        type: Schema.Types.ObjectId,
-        ref: 'HardDrive'
-    }
-});
-
-const AdapterFK_schema = new Schema({
-    AdapterID: {
-        type: Schema.Types.ObjectId,
-        ref: 'Adapter'
-    }
-});
-
-const ProductsFK_schema = new Schema({
-    LaptopID: {
-        type: Schema.Types.ObjectId,
-        ref: 'Laptop'
-    },
-    RAM_ID: {
-        type: Schema.Types.ObjectId,
-        ref: 'RAM'
-    },
-    HardDriveID: {
-        type: Schema.Types.ObjectId,
-        ref: 'HardDrive'
-    },
-    AdapterID: {
-        type: Schema.Types.ObjectId,
-        ref: 'Adapter'
-    }
-});
-
 module.exports = {
-    LaptopOrderSchema,
-    RAM_OrderSchema,
-    HardDriveOrderSchema,
-    AdapterOrderSchema,
-    ProductImageSchema,
     LaptopFK_schema,
     RAM_FK_schema,
     HardDriveFK_schema,
     AdapterFK_schema,
-    ProductsFK_schema
+    ProductsFK_schema,
+    ProductsOrderSchema,
+    InstallationInfoSchema,
+    ProductImageSchema
 }

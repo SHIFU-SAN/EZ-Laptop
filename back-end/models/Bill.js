@@ -1,12 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const {
-    LaptopOrderSchema,
-    RAM_OrderSchema,
-    HardDriveOrderSchema,
-    AdapterOrderSchema
-} = require("./ReusableSchema");
+const ProductsOrderSchema = require("./ReusableSchema");
 
 const BillSchema = new Schema({
     UserID: {
@@ -14,12 +9,10 @@ const BillSchema = new Schema({
         ref: 'Account',
         required: true
     },
-    Products: [{
-        LaptopOrder: LaptopOrderSchema,
-        RAM_Order: RAM_OrderSchema,
-        HardDriveOrder: HardDriveOrderSchema,
-        AdapterOrder: AdapterOrderSchema
-    }],
+    ProductsOrder: {
+        type: [ProductsOrderSchema],
+        default: []
+    },
     Total: Double
 });
 

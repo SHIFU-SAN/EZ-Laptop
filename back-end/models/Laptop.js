@@ -47,7 +47,10 @@ const LaptopSchema = new Schema({
     },
     Price: Double,
     Quantity: Int32,
-    Images: [ProductImageSchema],
+    Images: {
+        type: [ProductImageSchema],
+        default: []
+    },
     Status: {
         type: Boolean,
         default: true
