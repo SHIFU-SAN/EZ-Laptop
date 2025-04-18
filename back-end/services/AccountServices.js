@@ -17,47 +17,47 @@ class AccountServices {
     }
 
     static async readAccounts() {
-        const Result = await Account.find();
-        return Result ? Result : null;
+        const Accounts = await Account.find();
+        return Accounts ? Accounts : null;
     }
 
     static async readAccountByID(id) {
-        const Result = await Account.findById(id);
-        return Result ? Result : null;
+        const AccountTarget = await Account.findById(id);
+        return AccountTarget ? AccountTarget : null;
     }
 
     static async updateAccount(id, new_info) {
-        let Target = await Account.findById(id);
+        let AccountTarget = await Account.findById(id);
 
         if (new_info.PhoneNumber) {
-            Target.PhoneNumber = new_info.PhoneNumber;
+            AccountTarget.PhoneNumber = new_info.PhoneNumber;
         }
         if (new_info.Email) {
-            Target.Email = new_info.Email;
+            AccountTarget.Email = new_info.Email;
         }
         if (new_info.Username) {
-            Target.Username = new_info.Username;
+            AccountTarget.Username = new_info.Username;
         }
         if (new_info.Password) {
-            Target.Password = new_info.Password;
+            AccountTarget.Password = new_info.Password;
         }
         if (new_info.Name) {
-            Target.Name = new_info.Name;
+            AccountTarget.Name = new_info.Name;
         }
         if (new_info.Avatar) {
-            Target.Avatar = new_info.Avatar;
+            AccountTarget.Avatar = new_info.Avatar;
         }
         if (new_info.Permission) {
-            Target.Permission = new_info.Permission;
+            AccountTarget.Permission = new_info.Permission;
         }
 
-        await Target.save();
-        return Target ? Target : null;
+        await AccountTarget.save();
+        return AccountTarget ? AccountTarget : null;
     }
 
     static async deleteAccount(id) {
-        const Result = await Account.findByIdAndDelete(id);
-        return Result ? Result : null;
+        const AccountDeleted = await Account.findByIdAndDelete(id);
+        return AccountDeleted ? AccountDeleted : null;
     }
 }
 

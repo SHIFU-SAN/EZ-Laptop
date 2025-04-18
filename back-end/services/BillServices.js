@@ -86,8 +86,8 @@ class BillServices {
     }
 
     static async deleteBill(id) {
-        const BillTarget = await Bill.findByIdAndDelete(id);
-        return BillTarget ? BillTarget : null;
+        const BillDeleted = await Bill.findByIdAndDelete(id);
+        return BillDeleted ? BillDeleted : null;
     }
 }
 

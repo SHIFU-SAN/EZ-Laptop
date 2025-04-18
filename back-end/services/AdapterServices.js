@@ -18,13 +18,13 @@ class AdapterServices {
     }
 
     static async getAdapters() {
-        const Result = await Adapter.find();
-        return Result ? Result : null;
+        const Adapters = await Adapter.find();
+        return Adapters ? Adapters : null;
     }
 
     static async getAdapterByID(id) {
-        const Result = await Adapter.findById(id);
-        return Result ? Result : null;
+        const AdapterTarget = await Adapter.findById(id);
+        return AdapterTarget ? AdapterTarget : null;
     }
 
     static async updateAdapter(id, new_info) {
@@ -133,8 +133,8 @@ class AdapterServices {
     }
 
     static async deleteAdapter(id) {
-        const Result = await Adapter.findByIdAndDelete(id);
-        return Result ? Result : null;
+        const AdapterDeleted = await Adapter.findByIdAndDelete(id);
+        return AdapterDeleted ? AdapterDeleted : null;
     }
 }
 
