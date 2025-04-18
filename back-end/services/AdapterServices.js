@@ -1,54 +1,141 @@
-const {Adapter} = require("../models/Adapter");
+const Adapter = require('../models/Adapter');
 
-async function addAdapter(info) {
-    let NewAdapter = new Adapter({
-        ID: info.ID,
-        Branch: info.Branch,
-        OutputVoltage: info.OutputVoltage,
-        OutputCurrent: info.OutputCurrent,
-        Price: info.Price
-    });
-    await NewAdapter.save();
-    return NewAdapter;
-}
-
-async function getAllAdapters() {
-    let result = await Adapter.find();
-    return result ? result : null;
-}
-
-async function getAdapterByID(id) {
-    let result = await Adapter.findOne({ID: id});
-    return result ? result : null;
-}
-
-async function updateAdapter(id, new_info) {
-    let result = await Adapter.findOne({ID: id});
-    if (new_info.Branch) {
-        result.Branch = new_info.Branch;
+class AdapterServices {
+    static async createAdapter(info) {
+        const NewAdapter = new Adapter({
+            Branch: info.Branch,
+            Name: info.Name,
+            OutputPower: info.OutputPower,
+            OutputVoltage: info.OutputVoltage,
+            OutputCurrent: info.OutputCurrent,
+            Price: info.Price,
+            Status: info.Status,
+            Images: info.Images,
+            CompatibleLaptops: info.CompatibleLaptops
+        });
+        await NewAdapter.save();
+        return NewAdapter ? NewAdapter : null;
     }
-    if (new_info.OutputVoltage) {
-        result.OutputVoltage = new_info.OutputVoltage;
+
+    static async getAdapters() {
+        const Result = await Adapter.find();
+        return Result ? Result : null;
     }
-    if (new_info.OutputCurrent) {
-        result.OutputCurrent = new_info.OutputCurrent;
+
+    static async getAdapterByID(id) {
+        const Result = await Adapter.findById(id);
+        return Result ? Result : null;
     }
-    if (new_info.Price) {
-        result.Price = new_info.Price;
+
+    static async updateAdapter(id, new_info) {
+        let AdapterTarget = await Adapter.findById(id);
+
+        if (new_info.Branch) {
+            AdapterTarget.Branch = new_info.Branch;
+        }
+        if (new_info.Name) {
+            AdapterTarget.Name = new_info.Name;
+        }
+        if (new_info.OutputPower) {
+            AdapterTarget.OutputPower = new_info.OutputPower;
+        }
+        if (new_info.OutputVoltage) {
+            AdapterTarget.OutputVoltage = new_info.OutputVoltage;
+        }
+        if (new_info.OutputCurrent) {
+            AdapterTarget.OutputCurrent = new_info.OutputCurrent;
+        }
+        if (new_info.Price) {
+            AdapterTarget.Price = new_info.Price;
+        }
+        if (new_info.Status) {
+            AdapterTarget.Price = new_info.Status;
+        }
+
+        await AdapterTarget.save();
+        return AdapterTarget ? AdapterTarget : null;
     }
-    await result.save();
-    return result ? result : null;
+
+    static async addImage(id, new_image) {
+        let AdapterTarget = await Adapter.findById(id);
+        const OldLength = AdapterTarget.Images.length;
+
+        AdapterTarget.Images.push(new_image);
+        await AdapterTarget.save();
+        const NewLength = AdapterTarget.Images.length;
+
+        return OldLength < NewLength ? new_image : null;
+    }
+
+    static async removeImage(id, image_id) {
+        let AdapterTarget = await Adapter.findById(id);
+        const OldLength = AdapterTarget.Images.length;
+
+        let Images = AdapterTarget.Images;
+        let ImageRemoved = {}
+        Images.map(image => {
+            if (image._id === image_id) {
+                ImageRemoved = image;
+                Images.pull(image._id)
+            }
+        });
+        await AdapterTarget.save();
+        const NewLength = AdapterTarget.Images.length;
+
+        return OldLength > NewLength ? ImageRemoved : null;
+    }
+
+    static async removeImages(id) {
+        let AdapterTarget = await Adapter.findById(id);
+        const OldImages = AdapterTarget.Images;
+        AdapterTarget.Images = [];
+        await AdapterTarget.save();
+        const NewLength = AdapterTarget.Images.length;
+        return NewLength === 0 ? OldImages : null;
+    }
+
+    static async addCompatibleLaptop(id, laptop_id) {
+        let AdapterTarget = await Adapter.findById(id);
+        const OldLength = AdapterTarget.CompatibleLaptops.length;
+
+        AdapterTarget.CompatibleLaptops.push(laptop_id);
+        await AdapterTarget.save();
+        const NewLength = AdapterTarget.CompatibleLaptops.length;
+
+        return OldLength < NewLength ? laptop_id : null;
+    }
+
+    static async removeCompatibleLaptop(id, laptop_id) {
+        let AdapterTarget = await Adapter.findById(id);
+        const OldLength = AdapterTarget.CompatibleLaptops.length;
+
+        let CompatibleLaptops = AdapterTarget.CompatibleLaptops;
+        let LaptopRemoved = {}
+        CompatibleLaptops.map(laptop => {
+            if (laptop.LaptopID === laptop_id) {
+                LaptopRemoved = laptop;
+                CompatibleLaptops.pull(laptop._id)
+            }
+        });
+        await AdapterTarget.save();
+        const NewLength = AdapterTarget.CompatibleLaptops.length;
+
+        return OldLength > NewLength ? LaptopRemoved : null;
+    }
+
+    static async removeCompatibleLaptops(id) {
+        let AdapterTarget = await Adapter.findById(id);
+        const OldCompatibleLaptops = AdapterTarget.CompatibleLaptops;
+        AdapterTarget.CompatibleLaptops = [];
+        await AdapterTarget.save();
+        const NewLength = AdapterTarget.CompatibleLaptops.length;
+        return NewLength === 0 ? OldCompatibleLaptops : null;
+    }
+
+    static async deleteAdapter(id) {
+        const Result = await Adapter.findByIdAndDelete(id);
+        return Result ? Result : null;
+    }
 }
 
-async function deleteAdapter(id) {
-    let result = await Adapter.findOneAndDelete({ID: id});
-    return result ? result : null;
-}
-
-module.exports = {
-    addAdapter,
-    getAllAdapters,
-    getAdapterByID,
-    updateAdapter,
-    deleteAdapter
-}
+module.exports = AdapterServices;

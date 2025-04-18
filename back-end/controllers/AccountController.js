@@ -3,14 +3,15 @@ const app = express();
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+const DateServices = require("../services/DateServices");
 const AccountServices = require("../services/AccountServices");
 
 async function connectToDB() {
     try {
         await mongoose.connect(process.env.DB_URI);
-        console.log("Database connection successful! ^-^");
+        console.log(`${DateServices.getTimeCurrent()} Connected account controller to database successfully! ^-^`);
     } catch (err) {
-        console.error(`Database connection failed! Error: ${err}`);
+        console.error(`${DateServices.getTimeCurrent()} Account controller connection to database failed! Error: ${err}`);
     }
 }
 
@@ -19,12 +20,12 @@ connectToDB();
 app.use(express.json());
 
 class AccountController {
-    static async createAccount(req, res) {
+    static async addAccount(req, res) {
         try {
             const NewAccount = await AccountServices.createAccount(req.body);
             return res.json(NewAccount);
         } catch (err) {
-            console.error(`Can't create account! Error: ${err}`)
+            console.error(`${DateServices.getTimeCurrent()} Can't add account! Error: ${err}`)
         }
     }
 
@@ -33,34 +34,34 @@ class AccountController {
             const AccountsList = await AccountServices.getAccounts()
             return res.json(AccountsList);
         } catch (err) {
-            console.error(`Can't get accounts list! Error: ${err}`)
+            console.error(`${DateServices.getTimeCurrent()} Can't get accounts list! Error: ${err}`)
         }
     }
 
     static async getAccountByID(req, res) {
         try {
-            const Target = await AccountServices.getAccountByID(req.params.id);
-            return res.json(Target);
+            const AccountTarget = await AccountServices.getAccountByID(req.params.id);
+            return res.json(AccountTarget);
         } catch (err) {
-            console.error(`Can't get account by ID! Error: ${err}`)
+            console.error(`${DateServices.getTimeCurrent()} Can't get account by ID! Error: ${err}`)
         }
     }
 
-    static async updateAccount(req, res) {
+    static async setAccount(req, res) {
         try {
-            const Target = await AccountServices.updateAccount(req.params.id, req.body);
-            return res.json(Target);
+            const AccountTarget = await AccountServices.updateAccount(req.params.id, req.body);
+            return res.json(AccountTarget);
         } catch (err) {
-            console.error(`Can't update account! Error: ${err}`)
+            console.error(`${DateServices.getTimeCurrent()} Can't set account! Error: ${err}`)
         }
     }
 
-    static async deleteAccount(req, res) {
+    static async removeAccount(req, res) {
         try {
-            const Target = await AccountServices.deleteAccount(req.params.id);
-            return res.json(Target);
+            const AccountTarget = await AccountServices.deleteAccount(req.params.id);
+            return res.json(AccountTarget);
         } catch (err) {
-            console.error(`Can't delete account! Error: ${err}`)
+            console.error(`${DateServices.getTimeCurrent()} Can't delete account! Error: ${err}`)
         }
     }
 }

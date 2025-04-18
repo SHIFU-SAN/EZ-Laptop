@@ -11,6 +11,6 @@ router
     .get('/list', AccountController.getAccountsList)
     .get('/:id', AccountController.getAccountByID)
     .put('/:id', AccountController.setAccount)
-    .delete('/:id', AccountController.deleteAccount);
+    .delete('/:id', AccountController.removeAccount);
 
 module.exports = router;

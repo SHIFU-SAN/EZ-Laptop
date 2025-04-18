@@ -1,0 +1,142 @@
+const express = require('express');
+const app = express();
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+const AdapterServices = require("../services/AdapterServices");
+const DateServics = require("../services/DateServices");
+
+async function connectToDB() {
+    try {
+        await mongoose.connect(process.env.DB_URI);
+        console.log(`${DateServics.getTimeCurrent()} Connected adapter controller to database successfully! ^-^`);
+    } catch (err) {
+        console.error(`${DateServics.getTimeCurrent()} Adapter controller connection to database failed! Error: ${err}`);
+    }
+}
+
+connectToDB();
+
+app.use(express.json());
+
+class AdapterController {
+    static async addAdapter(req, res) {
+        try {
+            const NewAdapter = await AdapterServices.createAdapter(req.body);
+            return res.json(NewAdapter);
+        } catch (err) {
+            console.error(`${DateServics.getTimeCurrent()} Can't add adapter! Error: ${err}`)
+        }
+    }
+
+    static async getAdaptersList(req, res) {
+        try {
+            const AdaptersList = await AdapterServices.getAdapters();
+            return res.json(AdaptersList);
+        } catch (err) {
+            console.error(`${DateServics.getTimeCurrent()} Can't get adapters list! Error: ${err}`)
+        }
+    }
+
+    static async getAdapterByID(req, res) {
+        try {
+            const AdapterTarget = await AdapterServices.getAdapterByID(req.params.id);
+            return res.json(AdapterTarget);
+        } catch (err) {
+            console.error(`${DateServics.getTimeCurrent()} Can't get adapter by ID! Error: ${err}`)
+        }
+    }
+
+    static async setAdapter(req, res) {
+        try {
+            const AdapterTarget = await AdapterServices.updateAdapter(req.params.id, req.body);
+            return res.json(AdapterTarget);
+        } catch (err) {
+            console.error(`${DateServics.getTimeCurrent()} Can't set adapter! Error: ${err}`)
+        }
+    }
+
+    static async addImageAdapter(req, res) {
+        try {
+            const NewAdapterImage = await AdapterServices.addImage(req.params.id, req.body);
+            return res.json(NewAdapterImage)
+        } catch (err) {
+            console.error(`${DateServics.getTimeCurrent()} Can't add image adapter! Error: ${err}`)
+        }
+    }
+
+    static async addMoreAdapterImages(req, res) {
+        try {
+            const AdapterID = req.params.id;
+            const NewAdapterImages = req.body.map(async image => await AdapterServices.addImage(AdapterID, image));
+            return res.json(NewAdapterImages);
+        } catch (err) {
+            console.error(`${DateServics.getTimeCurrent()} Can't add more image adapter! Error: ${err}`)
+        }
+    }
+
+    static async removeAdapterImage(req, res) {
+        try {
+            const ImageRemoved = await AdapterServices.removeImage(req.params.id, req.params.image_id);
+            return res.json(ImageRemoved);
+        } catch (err) {
+            console.error(`${DateServics.getTimeCurrent()} Can't remove image adapter! Error: ${err}`)
+        }
+    }
+
+    static async removeAdapterImages(req, res) {
+        try {
+            const ImagesRemoved = await AdapterServices.removeImages(req.params.id);
+            return res.json(ImagesRemoved);
+        } catch (err) {
+            console.error(`${DateServics.getTimeCurrent()} Can't remove images adapter! Error: ${err}`)
+        }
+    }
+
+    static async addCompatibleLaptop(req, res) {
+        try {
+            const NewCompatibleLaptop = await AdapterServices.addCompatibleLaptop(req.params.id, req.params.laptop_id);
+            return res.json(NewCompatibleLaptop)
+        } catch (err) {
+            console.error(`${DateServics.getTimeCurrent()} Can't add compatible laptop with adapter! Error: ${err}`)
+        }
+    }
+
+    static async addMoreCompatibleLaptop(req, res) {
+        try {
+            const NewCompatibleLaptops = req.body.map(async laptop => await AdapterServices.addCompatibleLaptop(req.params.id, req.body));
+            return res.json(NewCompatibleLaptops);
+        } catch (err) {
+            console.error(`${DateServics.getTimeCurrent()} Can't add more compatible laptop with adapter! Error: ${err}`)
+        }
+    }
+
+    static async removeCompatibleLaptop(req, res) {
+        try {
+            const LaptopRemoved = await AdapterServices.removeCompatibleLaptop(req.params.id, req.params.laptop_id);
+            return res.json(LaptopRemoved);
+        } catch (err) {
+            console.error(`${DateServics.getTimeCurrent()} Can't remove compatible laptop with adapter! Error: ${err}`)
+        }
+    }
+
+    static async removeCompatibleLaptops(req, res) {
+        try {
+            const LaptopsRemoved = await AdapterServices.removeCompatibleLaptops(req.params.id);
+            return res.json(LaptopsRemoved);
+        } catch (err) {
+            console.error(`${DateServics.getTimeCurrent()} Can't remove compatible laptops with adapter! Error: ${err}`)
+        }
+    }
+
+    static async removeAdapter(req, res) {
+        try {
+            const AdapterTarget = await AdapterServices.deleteAdapter(req.params.id);
+            return res.json(AdapterTarget);
+        } catch (err) {
+            console.error(`${DateServics.getTimeCurrent()} Can't remove adapter! Error: ${err}`)
+        }
+    }
+}
+
+module.exports = AdapterController;

@@ -4,32 +4,28 @@ const Schema = mongoose.Schema;
 const LaptopFK_schema = new Schema({
     LaptopID: {
         type: Schema.Types.ObjectId,
-        ref: 'Laptop',
-        required: true
+        ref: 'Laptop'
     }
 });
 
 const RAM_FK_schema = new Schema({
     RAM_ID: {
         type: Schema.Types.ObjectId,
-        ref: 'RAM',
-        required: true
+        ref: 'RAM'
     }
 });
 
 const HardDriveFK_schema = new Schema({
     HardDriveID: {
         type: Schema.Types.ObjectId,
-        ref: 'HardDrive',
-        required: true
+        ref: 'HardDrive'
     }
 });
 
 const AdapterFK_schema = new Schema({
     AdapterID: {
         type: Schema.Types.ObjectId,
-        ref: 'Adapter',
-        required: true
+        ref: 'Adapter'
     }
 });
 
@@ -65,11 +61,6 @@ const InstallationInfoSchema = new Schema({
 });
 
 const ProductImageSchema = new Schema({
-    ImageID: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        unique: true
-    },
     Link: String
 });
 
