@@ -58,17 +58,17 @@ class BillController {
 
     static async addOrder(req, res) {
         try {
-            const NewOrder = await BillServices.addOrder(req.params.id, req.body);
+            const NewOrder = await BillServices.createOrder(req.params.id, req.body);
             return res.json(NewOrder);
         } catch (err) {
             console.error(`${DateServics.getTimeCurrent()} Can't add order! Error: ${err}`)
         }
     }
 
-    static async addMoreOrder(req, res) {
+    static async addMoreOrders(req, res) {
         try {
             const BillID = req.params.id;
-            const NewOrders = req.body.map(async order => await BillServices.addOrder(BillID, order));
+            const NewOrders = req.body.map(async order => await BillServices.createOrder(BillID, order));
             return res.json(NewOrders);
         } catch (err) {
             console.error(`${DateServics.getTimeCurrent()} Can't add more order! Error: ${err}`)
@@ -77,7 +77,7 @@ class BillController {
 
     static async removeOrder(req, res) {
         try {
-            const OrderRemoved = await BillServices.removeOrder(req.params.id, req.params.product_id);
+            const OrderRemoved = await BillServices.deleteOrder(req.params.id, req.params.product_id);
             return res.json(OrderRemoved);
         } catch (err) {
             console.error(`${DateServics.getTimeCurrent()} Can't remove order! Error: ${err}`)
@@ -86,7 +86,7 @@ class BillController {
 
     static async removeOrders(req, res) {
         try {
-            const OrdersRemoved = await BillServices.removeOrders(req.params.id);
+            const OrdersRemoved = await BillServices.deleteOrders(req.params.id);
             return res.json(OrdersRemoved);
         } catch (err) {
             console.error(`${DateServics.getTimeCurrent()} Can't remove orders! Error: ${err}`)

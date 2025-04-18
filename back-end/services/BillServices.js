@@ -38,7 +38,7 @@ class BillServices {
         return BillTarget ? BillTarget : null;
     }
 
-    static async addOrder(id, new_order) {
+    static async createOrder(id, new_order) {
         const BillTarget = await Bill.findById(id);
 
         const OldLength = BillTarget.ProductsOrder.length;
@@ -51,7 +51,7 @@ class BillServices {
         return OldLength < NewLength ? new_order : null;
     }
 
-    static async removeOrder(id, product_id) {
+    static async deleteOrder(id, product_id) {
         const BillTarget = await Bill.findById(id);
 
         const OldLength = BillTarget.ProductsOrder.length;
@@ -76,7 +76,7 @@ class BillServices {
         return OldLength > NewLength ? ProductRemoved : null;
     }
 
-    static async removeOrders(id) {
+    static async deleteOrders(id) {
         let BillTarget = await Bill.findById(id);
         const OldOrders = BillTarget.ProductsOrder;
         BillTarget.ProductsOrder = [];

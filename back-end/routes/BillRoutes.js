@@ -12,7 +12,7 @@ router
     .get('/:id', BillController.getBillByID)
     .put('/:id', BillController.setBill)
     .put('/:id/order', BillController.addOrder)
-    .put('/:id/orders', BillController.addMoreOrder)
+    .put('/:id/orders', BillController.addMoreOrders)
     .delete('/:id/orders/:product_id', BillController.removeOrder)
     .delete('/:id/orders', BillController.removeOrders)
     .delete('/:id', BillController.removeBill);
