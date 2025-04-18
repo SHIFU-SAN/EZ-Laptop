@@ -7,19 +7,21 @@ class AccountServices {
             Email: info.Email,
             Username: info.Username,
             Password: info.Password,
-            Name: info.Name
+            Name: info.Name,
+            Avatar: info.Avatar,
+            Permission: info.Permission
         });
 
         await NewAccount.save();
         return NewAccount ? NewAccout : null;
     }
 
-    static async getAccounts() {
+    static async readAccounts() {
         const Result = await Account.find();
         return Result ? Result : null;
     }
 
-    static async getAccountByID(id) {
+    static async readAccountByID(id) {
         const Result = await Account.findById(id);
         return Result ? Result : null;
     }

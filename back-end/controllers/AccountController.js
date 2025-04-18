@@ -31,7 +31,7 @@ class AccountController {
 
     static async getAccountsList(req, res) {
         try {
-            const AccountsList = await AccountServices.getAccounts()
+            const AccountsList = await AccountServices.readAccounts()
             return res.json(AccountsList);
         } catch (err) {
             console.error(`${DateServices.getTimeCurrent()} Can't get accounts list! Error: ${err}`)
@@ -40,7 +40,7 @@ class AccountController {
 
     static async getAccountByID(req, res) {
         try {
-            const AccountTarget = await AccountServices.getAccountByID(req.params.id);
+            const AccountTarget = await AccountServices.readAccountByID(req.params.id);
             return res.json(AccountTarget);
         } catch (err) {
             console.error(`${DateServices.getTimeCurrent()} Can't get account by ID! Error: ${err}`)
