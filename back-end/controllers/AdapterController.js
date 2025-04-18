@@ -56,37 +56,37 @@ class AdapterController {
         }
     }
 
-    static async addImageAdapter(req, res) {
+    static async addImage(req, res) {
         try {
-            const NewAdapterImage = await AdapterServices.addImage(req.params.id, req.body);
+            const NewAdapterImage = await AdapterServices.createImage(req.params.id, req.body);
             return res.json(NewAdapterImage)
         } catch (err) {
             console.error(`${DateServics.getTimeCurrent()} Can't add image adapter! Error: ${err}`)
         }
     }
 
-    static async addMoreAdapterImages(req, res) {
+    static async addMoreImages(req, res) {
         try {
             const AdapterID = req.params.id;
-            const NewAdapterImages = req.body.map(async image => await AdapterServices.addImage(AdapterID, image));
+            const NewAdapterImages = req.body.map(async image => await AdapterServices.createImage(AdapterID, image));
             return res.json(NewAdapterImages);
         } catch (err) {
             console.error(`${DateServics.getTimeCurrent()} Can't add more image adapter! Error: ${err}`)
         }
     }
 
-    static async removeAdapterImage(req, res) {
+    static async removeImage(req, res) {
         try {
-            const ImageRemoved = await AdapterServices.removeImage(req.params.id, req.params.image_id);
+            const ImageRemoved = await AdapterServices.deleteImage(req.params.id, req.params.image_id);
             return res.json(ImageRemoved);
         } catch (err) {
             console.error(`${DateServics.getTimeCurrent()} Can't remove image adapter! Error: ${err}`)
         }
     }
 
-    static async removeAdapterImages(req, res) {
+    static async removeImages(req, res) {
         try {
-            const ImagesRemoved = await AdapterServices.removeImages(req.params.id);
+            const ImagesRemoved = await AdapterServices.deleteImage(req.params.id);
             return res.json(ImagesRemoved);
         } catch (err) {
             console.error(`${DateServics.getTimeCurrent()} Can't remove images adapter! Error: ${err}`)
@@ -95,7 +95,7 @@ class AdapterController {
 
     static async addCompatibleLaptop(req, res) {
         try {
-            const NewCompatibleLaptop = await AdapterServices.addCompatibleLaptop(req.params.id, req.params.laptop_id);
+            const NewCompatibleLaptop = await AdapterServices.createCompatibleLaptop(req.params.id, req.params.laptop_id);
             return res.json(NewCompatibleLaptop)
         } catch (err) {
             console.error(`${DateServics.getTimeCurrent()} Can't add compatible laptop with adapter! Error: ${err}`)
@@ -104,7 +104,7 @@ class AdapterController {
 
     static async addMoreCompatibleLaptop(req, res) {
         try {
-            const NewCompatibleLaptops = req.body.map(async laptop => await AdapterServices.addCompatibleLaptop(req.params.id, req.body));
+            const NewCompatibleLaptops = req.body.map(async laptop => await AdapterServices.createCompatibleLaptop(req.params.id, req.body));
             return res.json(NewCompatibleLaptops);
         } catch (err) {
             console.error(`${DateServics.getTimeCurrent()} Can't add more compatible laptop with adapter! Error: ${err}`)
@@ -113,7 +113,7 @@ class AdapterController {
 
     static async removeCompatibleLaptop(req, res) {
         try {
-            const LaptopRemoved = await AdapterServices.removeCompatibleLaptop(req.params.id, req.params.laptop_id);
+            const LaptopRemoved = await AdapterServices.deleteCompatibleLaptop(req.params.id, req.params.laptop_id);
             return res.json(LaptopRemoved);
         } catch (err) {
             console.error(`${DateServics.getTimeCurrent()} Can't remove compatible laptop with adapter! Error: ${err}`)
@@ -122,7 +122,7 @@ class AdapterController {
 
     static async removeCompatibleLaptops(req, res) {
         try {
-            const LaptopsRemoved = await AdapterServices.removeCompatibleLaptops(req.params.id);
+            const LaptopsRemoved = await AdapterServices.deleteCompatibleLaptops(req.params.id);
             return res.json(LaptopsRemoved);
         } catch (err) {
             console.error(`${DateServics.getTimeCurrent()} Can't remove compatible laptops with adapter! Error: ${err}`)

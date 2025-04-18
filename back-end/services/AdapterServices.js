@@ -56,7 +56,7 @@ class AdapterServices {
         return AdapterTarget ? AdapterTarget : null;
     }
 
-    static async addImage(id, new_image) {
+    static async createImage(id, new_image) {
         let AdapterTarget = await Adapter.findById(id);
         const OldLength = AdapterTarget.Images.length;
 
@@ -67,7 +67,7 @@ class AdapterServices {
         return OldLength < NewLength ? new_image : null;
     }
 
-    static async removeImage(id, image_id) {
+    static async deleteImage(id, image_id) {
         let AdapterTarget = await Adapter.findById(id);
         const OldLength = AdapterTarget.Images.length;
 
@@ -85,7 +85,7 @@ class AdapterServices {
         return OldLength > NewLength ? ImageRemoved : null;
     }
 
-    static async removeImages(id) {
+    static async deleteImages(id) {
         let AdapterTarget = await Adapter.findById(id);
         const OldImages = AdapterTarget.Images;
         AdapterTarget.Images = [];
@@ -94,7 +94,7 @@ class AdapterServices {
         return NewLength === 0 ? OldImages : null;
     }
 
-    static async addCompatibleLaptop(id, laptop_id) {
+    static async createCompatibleLaptop(id, laptop_id) {
         let AdapterTarget = await Adapter.findById(id);
         const OldLength = AdapterTarget.CompatibleLaptops.length;
 
@@ -105,7 +105,7 @@ class AdapterServices {
         return OldLength < NewLength ? laptop_id : null;
     }
 
-    static async removeCompatibleLaptop(id, laptop_id) {
+    static async deleteCompatibleLaptop(id, laptop_id) {
         let AdapterTarget = await Adapter.findById(id);
         const OldLength = AdapterTarget.CompatibleLaptops.length;
 
@@ -123,7 +123,7 @@ class AdapterServices {
         return OldLength > NewLength ? LaptopRemoved : null;
     }
 
-    static async removeCompatibleLaptops(id) {
+    static async deleteCompatibleLaptops(id) {
         let AdapterTarget = await Adapter.findById(id);
         const OldCompatibleLaptops = AdapterTarget.CompatibleLaptops;
         AdapterTarget.CompatibleLaptops = [];
