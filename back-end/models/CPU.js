@@ -2,17 +2,17 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const AMD_schema = new Schema({
-    BaseClock: Double,
-    BoostClock: Double
+    BaseClock: Number,
+    BoostClock: Number
 });
 
 const Intel_schema = new Schema({
-    NumberPcores: Int32,
-    BaseClockPcores: Double,
-    BoostClockPcores: Double,
-    NumberEcores: Int32,
-    BaseClockEcores: Double,
-    BoostEcoreEcores: Double
+    NumberPcores: Number,
+    BaseClockPcores: Number,
+    BoostClockPcores: Number,
+    NumberEcores: Number,
+    BaseClockEcores: Number,
+    BoostEcoreEcores: Number
 });
 
 const CPU_schema = new Schema({
@@ -25,31 +25,31 @@ const CPU_schema = new Schema({
         required: true
     },
     NumberCores: {
-        type: Int32,
+        type: Number,
         required: true
     },
     NumberThreads: {
-        type: Int32,
+        type: Number,
         required: true
     },
     L2_cache: {
-        type: Int32,
+        type: Number,
         required: true
     },
     L3_cache: {
-        type: Int32,
+        type: Number,
         required: true
     },
     ProcessorTechnology: {
-        type: Int32,
+        type: Number,
         required: true
     },
     DefaultTDP: {
-        type: Int32,
+        type: Number,
         required: true
     },
     MaxTDP: {
-        type: Int32,
+        type: Number,
         required: true
     },
     AMD: AMD_schema,

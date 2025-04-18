@@ -12,12 +12,12 @@ const AdapterSchema = new Schema({
         required: true
     },
     OutputPower: {
-        type: Int32,
+        type: Number,
         required: true
     },
-    OutputVoltage: Double,
-    OutputCurrent: Double,
-    Price: Double,
+    OutputVoltage: Number,
+    OutputCurrent: Number,
+    Price: Number,
     Images: {
         type: [ProductImageSchema],
         default: []

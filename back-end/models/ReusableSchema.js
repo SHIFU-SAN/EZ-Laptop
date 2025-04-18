@@ -43,24 +43,24 @@ const ProductsFK_schema = new Schema({
 const ProductsOrderSchema = new Schema({
     LaptopOrder: {
         LaptopID: LaptopFK_schema,
-        Quantity: Int32
+        Quantity: Number
     },
     RAM_Order: {
         RAM_ID: RAM_FK_schema,
-        Quantity: Int32
+        Quantity: Number
     },
     HardDriveOrder: {
         HardDriveID: HardDriveFK_schema,
-        Quantity: Int32
+        Quantity: Number
     },
     AdapterOrder: {
         AdapterID: AdapterFK_schema,
-        Quantity: Int32
+        Quantity: Number
     }
 });
 
 const InstallationInfoSchema = new Schema({
-    SlotNumber: Int32,
+    SlotNumber: Number,
     LaptopID: LaptopFK_schema
 });
 

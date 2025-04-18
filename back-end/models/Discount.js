@@ -14,7 +14,7 @@ const DiscountSchema = new Schema({
         required: true
     },
     Percentage: {
-        type: Double,
+        type: Number,
         required: true
     },
     Event: String,

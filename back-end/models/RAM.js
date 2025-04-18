@@ -14,18 +14,18 @@ const RAM_Schema = new Schema({
         required: true
     },
     Capacity: {
-        type: Int32,
+        type: Number,
         required: true
     },
     BUS: {
-        type: Int32,
+        type: Number,
         required: true
     },
     InstallationInfos: {
         type: [InstallationInfoSchema],
         default: []
     },
-    Price: Double,
+    Price: Number,
     Images: {
         type: [ProductImageSchema],
         default: []

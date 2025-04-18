@@ -13,7 +13,7 @@ const BillSchema = new Schema({
         type: [ProductsOrderSchema],
         default: []
     },
-    Total: Double
+    Total: Number
 });
 
 const Bill = mongoose.model('Bill', BillSchema);

@@ -14,23 +14,23 @@ const HardDriveSchema = new Schema({
         required: true
     },
     Capacity: {
-        type: Int32,
+        type: Number,
         required: true
     },
     ReadSpeed: {
-        type: Int32,
+        type: Number,
         required: true
     },
     WriteSpeed: {
-        type: Int32,
+        type: Number,
         required: true
     },
-    TBW: Int32,
+    TBW: Number,
     LaptopInstallations: {
         type: [InstallationInfoSchema],
         default: []
     },
-    Price: Double,
+    Price: Number,
     Images: {
         type: [ProductImageSchema],
         default: []

@@ -11,14 +11,14 @@ const ScreenSchema = new Schema({
         required: true
     },
     Brightness: {
-        type: Int32,
+        type: Number,
         required: true
     },
     RefreshRate: {
-        type: Int32,
+        type: Number,
         required: true
     },
-    ColorAccuary: Double
+    ColorAccuary: Number
 });
 
 const Screen = mongoose.model('Screen', ScreenSchema);

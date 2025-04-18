@@ -36,17 +36,17 @@ const LaptopSchema = new Schema({
         ref: 'Adapter',
         required: true
     },
-    TDP: Int32,
+    TDP: Number,
     Weight: {
-        type: Double,
+        type: Number,
         required: true
     },
     Warranty: {
-        type: Int32,
+        type: Number,
         required: true
     },
-    Price: Double,
-    Quantity: Int32,
+    Price: Number,
+    Quantity: Number,
     Images: {
         type: [ProductImageSchema],
         default: []

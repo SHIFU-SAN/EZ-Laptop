@@ -11,11 +11,11 @@ const GPU_Schema = new Schema({
         required: true
     },
     VRAM: {
-        type: Int32,
+        type: Number,
         required: true
     },
     TDP: {
-        type: Int32,
+        type: Number,
         required: true
     }
 });

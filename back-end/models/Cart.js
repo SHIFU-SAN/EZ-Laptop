@@ -13,7 +13,7 @@ const CartSchema = new Schema({
         type: [ProductsOrderSchema],
         default: []
     },
-    Total: Double
+    Total: Number
 });
 
 const Cart = mongoose.model("Cart", CartSchema);
