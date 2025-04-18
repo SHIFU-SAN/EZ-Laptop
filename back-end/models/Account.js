@@ -29,10 +29,6 @@ const AccountSchema = new Schema({
     Permission: {
         type: String,
         default: "Customer"
-    },
-    Quantity: {
-        type: Double,
-        default: Double(0)
     }
 });
 
