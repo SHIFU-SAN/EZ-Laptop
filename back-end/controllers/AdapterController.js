@@ -23,8 +23,9 @@ class AdapterController {
     static async addAdapter(req, res) {
         try {
             const NewAdapter = await AdapterServices.createAdapter(req.body);
-            return res.json(NewAdapter);
+            return res.status(201).json(NewAdapter);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't add adapter! Error: ${err}`)
         }
     }
@@ -32,8 +33,9 @@ class AdapterController {
     static async getAdaptersList(req, res) {
         try {
             const AdaptersList = await AdapterServices.getAdapters();
-            return res.json(AdaptersList);
+            return res.status(200).json(AdaptersList);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't get adapters list! Error: ${err}`)
         }
     }
@@ -41,8 +43,9 @@ class AdapterController {
     static async getAdapterByID(req, res) {
         try {
             const AdapterTarget = await AdapterServices.getAdapterByID(req.params.id);
-            return res.json(AdapterTarget);
+            return res.status(200).json(AdapterTarget);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't get adapter by ID! Error: ${err}`)
         }
     }
@@ -50,8 +53,9 @@ class AdapterController {
     static async setAdapter(req, res) {
         try {
             const AdapterTarget = await AdapterServices.updateAdapter(req.params.id, req.body);
-            return res.json(AdapterTarget);
+            return res.status(200).json(AdapterTarget);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't set adapter! Error: ${err}`)
         }
     }
@@ -59,8 +63,9 @@ class AdapterController {
     static async addImage(req, res) {
         try {
             const NewAdapterImage = await AdapterServices.createImage(req.params.id, req.body);
-            return res.json(NewAdapterImage)
+            return res.status(201).json(NewAdapterImage)
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't add image adapter! Error: ${err}`)
         }
     }
@@ -69,8 +74,9 @@ class AdapterController {
         try {
             const AdapterID = req.params.id;
             const NewAdapterImages = req.body.map(async image => await AdapterServices.createImage(AdapterID, image));
-            return res.json(NewAdapterImages);
+            return res.status(201).json(NewAdapterImages);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't add more image adapter! Error: ${err}`)
         }
     }
@@ -78,8 +84,9 @@ class AdapterController {
     static async removeImage(req, res) {
         try {
             const ImageRemoved = await AdapterServices.deleteImage(req.params.id, req.params.image_id);
-            return res.json(ImageRemoved);
+            return res.status(200).json(ImageRemoved);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't remove image adapter! Error: ${err}`)
         }
     }
@@ -87,8 +94,9 @@ class AdapterController {
     static async removeImages(req, res) {
         try {
             const ImagesRemoved = await AdapterServices.deleteImage(req.params.id);
-            return res.json(ImagesRemoved);
+            return res.status(200).json(ImagesRemoved);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't remove images adapter! Error: ${err}`)
         }
     }
@@ -96,8 +104,9 @@ class AdapterController {
     static async addCompatibleLaptop(req, res) {
         try {
             const NewCompatibleLaptop = await AdapterServices.createCompatibleLaptop(req.params.id, req.params.laptop_id);
-            return res.json(NewCompatibleLaptop)
+            return res.status(201).json(NewCompatibleLaptop)
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't add compatible laptop with adapter! Error: ${err}`)
         }
     }
@@ -105,8 +114,9 @@ class AdapterController {
     static async addMoreCompatibleLaptop(req, res) {
         try {
             const NewCompatibleLaptops = req.body.map(async laptop => await AdapterServices.createCompatibleLaptop(req.params.id, req.body));
-            return res.json(NewCompatibleLaptops);
+            return res.status(201).json(NewCompatibleLaptops);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't add more compatible laptop with adapter! Error: ${err}`)
         }
     }
@@ -114,8 +124,9 @@ class AdapterController {
     static async removeCompatibleLaptop(req, res) {
         try {
             const LaptopRemoved = await AdapterServices.deleteCompatibleLaptop(req.params.id, req.params.laptop_id);
-            return res.json(LaptopRemoved);
+            return res.status(200).json(LaptopRemoved);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't remove compatible laptop with adapter! Error: ${err}`)
         }
     }
@@ -123,8 +134,9 @@ class AdapterController {
     static async removeCompatibleLaptops(req, res) {
         try {
             const LaptopsRemoved = await AdapterServices.deleteCompatibleLaptops(req.params.id);
-            return res.json(LaptopsRemoved);
+            return res.status(200).json(LaptopsRemoved);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't remove compatible laptops with adapter! Error: ${err}`)
         }
     }
@@ -132,8 +144,9 @@ class AdapterController {
     static async removeAdapter(req, res) {
         try {
             const AdapterTarget = await AdapterServices.deleteAdapter(req.params.id);
-            return res.json(AdapterTarget);
+            return res.status(200).json(AdapterTarget);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't remove adapter! Error: ${err}`)
         }
     }

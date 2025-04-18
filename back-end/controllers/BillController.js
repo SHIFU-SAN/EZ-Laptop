@@ -23,8 +23,9 @@ class BillController {
     static async addBill(req, res) {
         try {
             const NewBill = await BillServices.createBill(req.body);
-            return res.json(NewBill);
+            return res.status(201).json(NewBill);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't add bill! Error: ${err}`)
         }
     }
@@ -32,8 +33,9 @@ class BillController {
     static async getBillsList(req, res) {
         try {
             const BillsList = await BillServices.getBills();
-            return res.json(BillsList);
+            return res.status(200).json(BillsList);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't get bills list! Error: ${err}`)
         }
     }
@@ -41,8 +43,9 @@ class BillController {
     static async getBillByID(req, res) {
         try {
             const BillTarget = await BillServices.getBillByID(req.params.id);
-            return res.json(BillTarget);
+            return res.status(200).json(BillTarget);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't get bill by ID! Error: ${err}`)
         }
     }
@@ -50,8 +53,9 @@ class BillController {
     static async setBill(req, res) {
         try {
             const BillTarget = await BillServices.updateBill(req.params.id, req.body);
-            return res.json(BillTarget);
+            return res.status(200).json(BillTarget);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't set bill! Error: ${err}`)
         }
     }
@@ -59,8 +63,9 @@ class BillController {
     static async addOrder(req, res) {
         try {
             const NewOrder = await BillServices.createOrder(req.params.id, req.body);
-            return res.json(NewOrder);
+            return res.status(201).json(NewOrder);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't add order! Error: ${err}`)
         }
     }
@@ -69,8 +74,9 @@ class BillController {
         try {
             const BillID = req.params.id;
             const NewOrders = req.body.map(async order => await BillServices.createOrder(BillID, order));
-            return res.json(NewOrders);
+            return res.status(201).json(NewOrders);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't add more order! Error: ${err}`)
         }
     }
@@ -78,8 +84,9 @@ class BillController {
     static async removeOrder(req, res) {
         try {
             const OrderRemoved = await BillServices.deleteOrder(req.params.id, req.params.product_id);
-            return res.json(OrderRemoved);
+            return res.status(200).json(OrderRemoved);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't remove order! Error: ${err}`)
         }
     }
@@ -87,8 +94,9 @@ class BillController {
     static async removeOrders(req, res) {
         try {
             const OrdersRemoved = await BillServices.deleteOrders(req.params.id);
-            return res.json(OrdersRemoved);
+            return res.status(200).json(OrdersRemoved);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't remove orders! Error: ${err}`)
         }
     }
@@ -96,8 +104,9 @@ class BillController {
     static async removeBill(req, res) {
         try {
             const BillTarget = await BillServices.deleteBill(req.params.id);
-            return res.json(BillTarget);
+            return res.status(200).json(BillTarget);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServics.getTimeCurrent()} Can't remove bill! Error: ${err}`)
         }
     }

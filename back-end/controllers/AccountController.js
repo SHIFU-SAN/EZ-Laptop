@@ -23,8 +23,9 @@ class AccountController {
     static async addAccount(req, res) {
         try {
             const NewAccount = await AccountServices.createAccount(req.body);
-            return res.json(NewAccount);
+            return res.status(201).json(NewAccount);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServices.getTimeCurrent()} Can't add account! Error: ${err}`)
         }
     }
@@ -32,8 +33,9 @@ class AccountController {
     static async getAccountsList(req, res) {
         try {
             const AccountsList = await AccountServices.readAccounts()
-            return res.json(AccountsList);
+            return res.status(200).json(AccountsList);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServices.getTimeCurrent()} Can't get accounts list! Error: ${err}`)
         }
     }
@@ -41,8 +43,9 @@ class AccountController {
     static async getAccountByID(req, res) {
         try {
             const AccountTarget = await AccountServices.readAccountByID(req.params.id);
-            return res.json(AccountTarget);
+            return res.status(200).json(AccountTarget);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServices.getTimeCurrent()} Can't get account by ID! Error: ${err}`)
         }
     }
@@ -50,8 +53,9 @@ class AccountController {
     static async setAccount(req, res) {
         try {
             const AccountTarget = await AccountServices.updateAccount(req.params.id, req.body);
-            return res.json(AccountTarget);
+            return res.status(200).json(AccountTarget);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServices.getTimeCurrent()} Can't set account! Error: ${err}`)
         }
     }
@@ -59,8 +63,9 @@ class AccountController {
     static async removeAccount(req, res) {
         try {
             const AccountTarget = await AccountServices.deleteAccount(req.params.id);
-            return res.json(AccountTarget);
+            return res.status(200).json(AccountTarget);
         } catch (err) {
+            res.status(400);
             console.error(`${DateServices.getTimeCurrent()} Can't delete account! Error: ${err}`)
         }
     }
