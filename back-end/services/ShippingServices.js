@@ -1,4 +1,4 @@
-const Order = require('../models/Order');
+const Order = require('../models/Shipping');
 
 class OrderServices {
     static async createOrder(info) {

@@ -13,8 +13,8 @@ const OrderSchema = new Schema({
         type: String,
         required: true
     },
-    Products: {
-        type: [ProductsOrderSchema],
-        default: []
+    Bill_ID: {
+        type: Schema.Types.ObjectId,
+        ref: 'Bill'
     }
 })

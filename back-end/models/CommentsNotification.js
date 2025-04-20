@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const ProductsFK_schema = require("./ReusableSchema");
 
-const NewCommentsNotificationSchema = new Schema({
+const CommentsNotificationSchema = new Schema({
     Products: {
         type: [ProductsFK_schema],
         default: []
@@ -11,4 +11,6 @@ const NewCommentsNotificationSchema = new Schema({
     NumberOfNewComments: Number,
 });
 
-module.exports = NewCommentsNotificationSchema;
+const CommentsNotification = mongoose.model('CommentsNotification', CommentsNotificationSchema);
+
+module.exports = CommentsNotification;

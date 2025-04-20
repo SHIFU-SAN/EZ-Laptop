@@ -33,4 +33,5 @@ const AdapterSchema = new Schema({
 });
 
 const Adapter = mongoose.model('Adapter', AdapterSchema);
+
 module.exports = Adapter;

@@ -2,8 +2,8 @@ const CommentsNotification = require('../models/CommentsNotification');
 
 class CommentsNotificationServices {
     static async createNotification(info) {
-        const NewNotification = new NewCommentsNotification({
-            Prducts: info.Products,
+        const NewNotification = new CommentsNotification({
+            Products: info.Products,
             NumberOfNewComments: info.NumberOfNewComments
         });
 
