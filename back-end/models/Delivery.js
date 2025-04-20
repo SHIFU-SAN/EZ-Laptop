@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ProductsOrderSchema = require("./ReusableSchema");
-
-const OrderSchema = new Schema({
+const DeliverySchema = new Schema({
     CustomerID: {
         type: Schema.Types.ObjectId,
         ref: 'Account',
@@ -17,4 +15,8 @@ const OrderSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Bill'
     }
-})
+});
+
+const Delivery = mongoose.model('Delivery', DeliverySchema);
+
+module.exports = Delivery;
