@@ -15,6 +15,7 @@ const cpu_routes = require('./routes/CPU_routes');
 const discount_routes = require('./routes/DiscountRoutes');
 const gpu_routes = require('./routes/GPU_routes');
 const hard_drive_routes = require('./routes/HardDriveRoutes');
+const laptop_routes = require('./routes/LaptopRoutes');
 
 app
     .use(cors())
@@ -27,6 +28,7 @@ app
     .use('/api/cpu', cpu_routes)
     .use('/api/discount', discount_routes)
     .use('/api/gpu', gpu_routes)
-    .use('api/hard_drive', hard_drive_routes);
+    .use('api/hard_drive', hard_drive_routes)
+    .use('api/laptop', laptop_routes);
 
 app.listen(PORT, HOST, () => console.log(`${DateServices.getTimeCurrent()} Server is running on port ${PORT}...`));
