@@ -8,32 +8,23 @@ const LaptopFK_schema = new Schema({
     }
 });
 
-const RAM_FK_schema = new Schema({
+const ProductsFK_schema = new Schema({
+    LaptopID: {
+        type: Schema.Types.ObjectId,
+        ref: 'Laptop'
+    },
     RAM_ID: {
         type: Schema.Types.ObjectId,
         ref: 'RAM'
-    }
-});
-
-const HardDriveFK_schema = new Schema({
+    },
     HardDriveID: {
         type: Schema.Types.ObjectId,
         ref: 'HardDrive'
-    }
-});
-
-const AdapterFK_schema = new Schema({
+    },
     AdapterID: {
         type: Schema.Types.ObjectId,
         ref: 'Adapter'
     }
-});
-
-const ProductsFK_schema = new Schema({
-    LaptopID: LaptopFK_schema,
-    RAM_ID: RAM_FK_schema,
-    HardDriveID: HardDriveFK_schema,
-    AdapterID: AdapterFK_schema,
 });
 
 const ProductsOrderSchema = new Schema({
@@ -42,15 +33,24 @@ const ProductsOrderSchema = new Schema({
         Quantity: Number
     },
     RAM_Order: {
-        RAM_ID: RAM_FK_schema,
+        RAM_ID: {
+            type: Schema.Types.ObjectId,
+            ref: 'RAM'
+        },
         Quantity: Number
     },
     HardDriveOrder: {
-        HardDriveID: HardDriveFK_schema,
+        HardDriveID: {
+            type: Schema.Types.ObjectId,
+            ref: 'HardDrive'
+        },
         Quantity: Number
     },
     AdapterOrder: {
-        AdapterID: AdapterFK_schema,
+        AdapterID: {
+            type: Schema.Types.ObjectId,
+            ref: 'Adapter'
+        },
         Quantity: Number
     }
 });
@@ -65,10 +65,6 @@ const ProductImageSchema = new Schema({
 });
 
 module.exports = {
-    LaptopFK_schema,
-    RAM_FK_schema,
-    HardDriveFK_schema,
-    AdapterFK_schema,
     ProductsFK_schema,
     ProductsOrderSchema,
     InstallationInfoSchema,
