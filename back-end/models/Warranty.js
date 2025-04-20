@@ -4,7 +4,10 @@ const Schema = mongoose.Schema;
 const ProductsFK_schema = require("./ReusableSchema");
 
 const GuaranteeSchema = new Schema({
-    ProductsFK: ProductsFK_schema,
+    Products: {
+        type: [ProductsFK_schema],
+        default: []
+    },
     CustomerID: {
         type: Schema.Types.ObjectId,
         ref: 'Account'
