@@ -56,6 +56,47 @@ class LaptopController {
         }
     }
 
+    static async addPort(req, res) {
+        try {
+            const NewPort = await LaptopServices.createPort(req.params.id, req.body);
+            return res.status(201).json(NewPort);
+        } catch (err) {
+            res.status(400);
+            console.error(`${DateServices.getTimeCurrent()} Can't add port to laptop! Error: ${err}`);
+        }
+    }
+
+    static async addMorePorts(req, res) {
+        try {
+            const LaptopID = req.params.id;
+            const NewPorts = req.body.map(async port => await LaptopServices.createPort(LaptopID, port));
+            return res.status(201).json(NewPorts);
+        } catch (err) {
+            res.status(400);
+            console.error(`${DateServices.getTimeCurrent()} Can't add more port to laptop! Error: ${err}`);
+        }
+    }
+
+    static async removePort(req, res) {
+        try {
+            const PortRemoved = await LaptopServices.deletePort(req.params.id, req.params.port_id);
+            return res.status(200).json(PortRemoved);
+        } catch (err) {
+            res.status(400);
+            console.error(`${DateServices.getTimeCurrent()} Can't remove port to laptop! Error: ${err}`);
+        }
+    }
+
+    static async removePorts(req, res) {
+        try {
+            const PortsRemoved = await LaptopServices.deletePort(req.params.id);
+            return res.status(200).json(PortsRemoved);
+        } catch (err) {
+            res.status(400);
+            console.error(`${DateServices.getTimeCurrent()} Can't remove ports to laptop! Error: ${err}`);
+        }
+    }
+
     static async addImage(req, res) {
         try {
             const NewImage = await LaptopServices.createImage(req.params.id, req.body);

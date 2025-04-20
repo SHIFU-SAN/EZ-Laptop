@@ -8,6 +8,7 @@ class LaptopServices {
             CPU_ID: info.CPU_ID,
             GPU_ID: info.GPU_ID,
             ScreenID: info.ScreenID,
+            Ports: info.Ports,
             Battery: info.Battery,
             AdapterID: info.AdapterID,
             TDP: info.TDP,
@@ -54,6 +55,9 @@ class LaptopServices {
         if (new_info.ScreenID) {
             LaptopTarget.ScreenID = new_info.ScreenID;
         }
+        if (new_info.Ports) {
+            LaptopTarget.Ports = new_info.Ports;
+        }
         if (new_info.Battery) {
             LaptopTarget.Battery = new_info.Battery;
         }
@@ -85,6 +89,54 @@ class LaptopServices {
         await LaptopTarget.save();
 
         return LaptopTarget ? LaptopTarget : null;
+    }
+
+    static async createPort(id, new_port) {
+        let LaptopTarget = await Laptop.findById(id);
+
+        const OldLength = LaptopTarget.Ports.length;
+
+        LaptopTarget.Ports.push(new_port);
+
+        await LaptopTarget.save();
+
+        const NewLength = LaptopTarget.Ports.length;
+
+        return OldLength < NewLength ? new_port : null;
+    }
+
+    static async deletePort(id, port_id) {
+        let LaptopTarget = await Laptop.findById(id);
+
+        const OldLength = LaptopTarget.Ports.length;
+
+        let PortDeleted = {}
+        LaptopTarget.Ports.map(port => {
+            if (port._id === port_id) {
+                PortDeleted = port;
+                LaptopTarget.Ports.pull(port._id)
+            }
+        });
+
+        await LaptopTarget.save();
+
+        const NewLength = LaptopTarget.Ports.length;
+
+        return OldLength > NewLength ? PortDeleted : null;
+    }
+
+    static async deletePorts(id) {
+        let LaptopTarget = await Laptop.findById(id);
+
+        const OldPorts = LaptopTarget.Ports;
+
+        LaptopTarget.Ports = [];
+
+        await LaptopTarget.save();
+
+        const NewLength = LaptopTarget.Ports.length;
+
+        return NewLength === 0 ? OldPorts : null;
     }
 
     static async createImage(id, new_image) {
