@@ -17,14 +17,8 @@ const HardDriveSchema = new Schema({
         type: Number,
         required: true
     },
-    ReadSpeed: {
-        type: Number,
-        required: true
-    },
-    WriteSpeed: {
-        type: Number,
-        required: true
-    },
+    ReadSpeed: Number,
+    WriteSpeed: Number,
     TBW: Number,
     LaptopInstallations: {
         type: [InstallationInfoSchema],
