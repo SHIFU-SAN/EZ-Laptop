@@ -9,7 +9,7 @@ const {
 const HardDriveSchema = new Schema({
     Branch: String,
     Name: String,
-    Type: {
+    PortType: {
         type: String,
         required: true
     },
