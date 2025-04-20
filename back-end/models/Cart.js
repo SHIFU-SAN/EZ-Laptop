@@ -9,7 +9,7 @@ const CartSchema = new Schema({
         ref: 'Account',
         required: true
     },
-    Products: {
+    ProductsOrder: {
         type: [ProductsOrderSchema],
         default: []
     },
