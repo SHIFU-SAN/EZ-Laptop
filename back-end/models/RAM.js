@@ -9,7 +9,7 @@ const {
 const RAM_Schema = new Schema({
     Branch: String,
     Name: String,
-    Type: {
+    PortType: {
         type: String,
         required: true
     },
@@ -21,7 +21,7 @@ const RAM_Schema = new Schema({
         type: Number,
         required: true
     },
-    InstallationInfos: {
+    LaptopInstallations: {
         type: [InstallationInfoSchema],
         default: []
     },
