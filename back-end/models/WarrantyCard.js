@@ -3,18 +3,19 @@ const Schema = mongoose.Schema;
 
 const ProductsFK_schema = require("./ReusableSchema");
 
+const ErrorSchema = new Schema({
+    Content: {
+        type: String,
+        required: true
+    }
+});
+
 const WarrantyCardSchema = new Schema({
-    ProductsFK: ProductsFK_schema,
-    Errors: [{
-        ErrorID: {
-            type: Schema.Types.ObjectId,
-            required: true
-        },
-        Content: {
-            type: String,
-            required: true
-        }
-    }],
+    Products: ProductsFK_schema,
+    Errors: {
+        type: [ErrorSchema],
+        default: []
+    },
     AppointmentDate: {
         type: Date,
         required: true

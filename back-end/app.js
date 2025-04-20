@@ -23,6 +23,7 @@ const present_routes = require('./routes/PresentRoutes');
 const ram_routes = require('./routes/RAM_routes');
 const screen_routes = require('./routes/ScreenRoutes');
 const warranty_routes = require('./routes/WarrantyRoutes');
+const warranty_card_routes = require('./routes/WarrantyCardRoutes');
 
 app
     .use(cors())
@@ -43,6 +44,7 @@ app
     .use('/api/present', present_routes)
     .use('/api/ram', ram_routes)
     .use('/api/screen', screen_routes)
-    .use('/api/warranty', warranty_routes);
+    .use('/api/warranty', warranty_routes)
+    .use('/api/warranty_card', warranty_card_routes);
 
 app.listen(PORT, HOST, () => console.log(`${DateServices.getTimeCurrent()} Server is running on port ${PORT}...`));
