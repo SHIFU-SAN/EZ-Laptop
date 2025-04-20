@@ -11,11 +11,13 @@ const adapter_routes = require('./routes/AdapterRoutes');
 const bill_routes = require('./routes/BillRoutes');
 const cart_routes = require('./routes/CartRoutes');
 const comment_routes = require('./routes/CommentRoutes');
+const comments_notification_routes = require('./routes/CommentsNotificationRoutes');
 const cpu_routes = require('./routes/CPU_routes');
 const discount_routes = require('./routes/DiscountRoutes');
 const gpu_routes = require('./routes/GPU_routes');
 const hard_drive_routes = require('./routes/HardDriveRoutes');
 const laptop_routes = require('./routes/LaptopRoutes');
+const order_routes = require('./routes/OrderRoutes');
 
 app
     .use(cors())
@@ -25,10 +27,12 @@ app
     .use('/api/bill', bill_routes)
     .use('/api/cart', cart_routes)
     .use('/api/comment', comment_routes)
+    .use('/api/comments/notification', comments_notification_routes)
     .use('/api/cpu', cpu_routes)
     .use('/api/discount', discount_routes)
     .use('/api/gpu', gpu_routes)
     .use('api/hard_drive', hard_drive_routes)
-    .use('api/laptop', laptop_routes);
+    .use('api/laptop', laptop_routes)
+    .use('api/order', order_routes);
 
 app.listen(PORT, HOST, () => console.log(`${DateServices.getTimeCurrent()} Server is running on port ${PORT}...`));
