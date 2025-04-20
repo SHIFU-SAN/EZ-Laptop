@@ -1,20 +1,19 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const LaptopFK_schema = require("./ReusableSchema");
+const ItemSchema = new Schema({
+    Name: String
+});
 
 const PresentSchema = new Schema({
-    LaptopID: LaptopFK_schema,
-    Products: [{
-        ProductID: {
-            type: Schema.Types.ObjectId,
-            required: true
-        },
-        Name: {
-            type: String,
-            required: true
-        }
-    }],
+    LaptopID: {
+        type: Schema.Types.ObjectId,
+        ref: 'Laptop'
+    },
+    Products: {
+        type: [ItemSchema],
+        default: []
+    },
     Start: {
         type: Date,
         required: true
