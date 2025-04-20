@@ -17,6 +17,7 @@ const discount_routes = require('./routes/DiscountRoutes');
 const gpu_routes = require('./routes/GPU_routes');
 const hard_drive_routes = require('./routes/HardDriveRoutes');
 const laptop_routes = require('./routes/LaptopRoutes');
+const port_routes = require('./routes/PortRoutes');
 const delivery_routes = require('./routes/DeliveryRoutes');
 const present_routes = require('./routes/PresentRoutes');
 const ram_routes = require('./routes/RAM_routes');
@@ -36,6 +37,7 @@ app
     .use('/api/gpu', gpu_routes)
     .use('/api/hard_drive', hard_drive_routes)
     .use('/api/laptop', laptop_routes)
+    .use('/api/port', port_routes)
     .use('/api/delivery', delivery_routes)
     .use('/api/present', present_routes)
     .use('/api/ram', ram_routes)
