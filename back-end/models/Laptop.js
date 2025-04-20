@@ -3,6 +3,13 @@ const Schema = mongoose.Schema;
 
 const ProductImageSchema = require("./ReusableSchema");
 
+const PortFK_schema = new Schema({
+    PortID: {
+        type: Schema.Types.ObjectId,
+        ref: 'Port'
+    }
+});
+
 const LaptopSchema = new Schema({
     Branch: {
         type: String,
@@ -26,6 +33,10 @@ const LaptopSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Screen',
         required: true
+    },
+    Ports: {
+        type: [PortFK_schema],
+        default: []
     },
     Battery: {
         type: String,
