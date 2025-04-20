@@ -4,7 +4,15 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const DateServices = require("../services/DateServices");
-const CPUServices = require("../services/CPUServices");
+const CPUServices = require("../services/CPU_services");
+
+async function connectToDB() {
+    await mongoose.connect(process.env.DB_URI);
+    console.log(`${DateServices.getTimeCurrent()} Connected CPU controller to database successfully! ^-^`);
+
+}
+
+connectToDB();
 
 app.use(express.json());
 
