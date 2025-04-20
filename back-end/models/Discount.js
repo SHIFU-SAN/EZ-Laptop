@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const ProductsFK_schema = require("./ReusableSchema");
 
 const DiscountSchema = new Schema({
-    ProductsFK: ProductsFK_schema,
+    Products: ProductsFK_schema,
     Start: {
         type: Date,
         required: true
