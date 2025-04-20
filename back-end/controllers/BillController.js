@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-require('dotenv').config();
 
 const BillServices = require("../services/BillServices");
 const DateServics = require("../services/DateServices");
@@ -32,7 +31,7 @@ class BillController {
 
     static async getBillsList(req, res) {
         try {
-            const BillsList = await BillServices.getBills();
+            const BillsList = await BillServices.readBills();
             return res.status(200).json(BillsList);
         } catch (err) {
             res.status(400);
@@ -42,7 +41,7 @@ class BillController {
 
     static async getBillByID(req, res) {
         try {
-            const BillTarget = await BillServices.getBillByID(req.params.id);
+            const BillTarget = await BillServices.readBillByID(req.params.id);
             return res.status(200).json(BillTarget);
         } catch (err) {
             res.status(400);

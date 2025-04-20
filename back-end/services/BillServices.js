@@ -13,12 +13,12 @@ class BillServices {
         return NewBill ? NewBill : null;
     }
 
-    static async getBills() {
+    static async readBills() {
         const BillsList = await Bill.find();
         return BillsList ? BillsList : null;
     }
 
-    static async getBillByID(id) {
+    static async readBillByID(id) {
         const BillTarget = await Bill.findById(id);
         return BillTarget ? BillTarget : null;
     }
@@ -57,17 +57,20 @@ class BillServices {
         const OldLength = BillTarget.ProductsOrder.length;
 
         let ProductsList = BillTarget.ProductsOrder;
-        let ProductRemoved = {}
+        let ProductRemoved = {};
         ProductsList.map(product => {
             if (product.LaptopOrder.LaptopID === product_id) {
                 ProductRemoved = product;
-                ProductsList.pull(product._id)
+                ProductsList.pull(product._id);
             } else if (product.RAM_Order.RAM_ID === product_id) {
                 ProductRemoved = product;
-                ProductsList.pull(product._id)
+                ProductsList.pull(product._id);
             } else if (product.HardDriveOrder.HardDriveID === product_id) {
                 ProductRemoved = product;
-                ProductsList.pull(product._id)
+                ProductsList.pull(product._id);
+            } else if (product.AdapterOrder.AdapterID === product_id) {
+                ProductRemoved = product;
+                ProductsList.pull(product._id);
             }
         });
         await BillTarget.save();

@@ -17,12 +17,12 @@ class AdapterServices {
         return NewAdapter ? NewAdapter : null;
     }
 
-    static async getAdapters() {
+    static async readAdapters() {
         const Adapters = await Adapter.find();
         return Adapters ? Adapters : null;
     }
 
-    static async getAdapterByID(id) {
+    static async readAdapterByID(id) {
         const AdapterTarget = await Adapter.findById(id);
         return AdapterTarget ? AdapterTarget : null;
     }
@@ -94,15 +94,15 @@ class AdapterServices {
         return NewLength === 0 ? OldImages : null;
     }
 
-    static async createCompatibleLaptop(id, laptop_id) {
+    static async createCompatibleLaptop(id, new_laptop) {
         let AdapterTarget = await Adapter.findById(id);
         const OldLength = AdapterTarget.CompatibleLaptops.length;
 
-        AdapterTarget.CompatibleLaptops.push(laptop_id);
+        AdapterTarget.CompatibleLaptops.push(new_laptop);
         await AdapterTarget.save();
         const NewLength = AdapterTarget.CompatibleLaptops.length;
 
-        return OldLength < NewLength ? laptop_id : null;
+        return OldLength < NewLength ? new_laptop : null;
     }
 
     static async deleteCompatibleLaptop(id, laptop_id) {

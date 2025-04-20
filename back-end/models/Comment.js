@@ -10,15 +10,17 @@ const CommentSchema = new Schema({
         ref: 'Account',
         index: 1
     },
-    ProductFK: ProductsFK_schema,
+    Products: {
+        type: [ProductsFK_schema],
+        default: []
+    },
     Content: {
         type: String,
         required: true
     },
     Time: {
         type: Date,
-        default: Date.now,
-        required: true
+        default: Date.now
     }
 });
 

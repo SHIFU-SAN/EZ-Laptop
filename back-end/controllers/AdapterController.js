@@ -32,7 +32,7 @@ class AdapterController {
 
     static async getAdaptersList(req, res) {
         try {
-            const AdaptersList = await AdapterServices.getAdapters();
+            const AdaptersList = await AdapterServices.readAdapters();
             return res.status(200).json(AdaptersList);
         } catch (err) {
             res.status(400);
@@ -42,7 +42,7 @@ class AdapterController {
 
     static async getAdapterByID(req, res) {
         try {
-            const AdapterTarget = await AdapterServices.getAdapterByID(req.params.id);
+            const AdapterTarget = await AdapterServices.readAdapterByID(req.params.id);
             return res.status(200).json(AdapterTarget);
         } catch (err) {
             res.status(400);
@@ -103,7 +103,7 @@ class AdapterController {
 
     static async addCompatibleLaptop(req, res) {
         try {
-            const NewCompatibleLaptop = await AdapterServices.createCompatibleLaptop(req.params.id, req.params.laptop_id);
+            const NewCompatibleLaptop = await AdapterServices.createCompatibleLaptop(req.params.id, req.body);
             return res.status(201).json(NewCompatibleLaptop)
         } catch (err) {
             res.status(400);
@@ -113,7 +113,8 @@ class AdapterController {
 
     static async addMoreCompatibleLaptop(req, res) {
         try {
-            const NewCompatibleLaptops = req.body.map(async laptop => await AdapterServices.createCompatibleLaptop(req.params.id, req.body));
+            const AdapterID = req.params.id;
+            const NewCompatibleLaptops = req.body.map(async laptop => await AdapterServices.createCompatibleLaptop(AdapterID, laptop));
             return res.status(201).json(NewCompatibleLaptops);
         } catch (err) {
             res.status(400);
