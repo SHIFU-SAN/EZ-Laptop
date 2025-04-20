@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ScreenSchema = new Schema({
-    Type: {
+    ScreenType: {
         type: String,
         required: true
     },
@@ -18,7 +18,7 @@ const ScreenSchema = new Schema({
         type: Number,
         required: true
     },
-    ColorAccuary: Number
+    ColorAccuracy: Number
 });
 
 const Screen = mongoose.model('Screen', ScreenSchema);
