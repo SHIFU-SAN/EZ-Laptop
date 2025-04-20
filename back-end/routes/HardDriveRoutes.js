@@ -14,7 +14,7 @@ router
     .post('/:id/installation/', HardDriveController.addLaptopInstallation)
     .post('/:id/installations', HardDriveController.addMoreInstallations)
     .delete('/:id/installations/:laptop_id', HardDriveController.removeLaptopInstallation)
-    .delete('/:id/installations', HardDriveController.removeLaptopInstalltions())
+    .delete('/:id/installations', HardDriveController.removeLaptopInstalltions)
     .delete('/:id', HardDriveController.removeHardDrive);
 
 module.exports = router;
