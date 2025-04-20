@@ -5,7 +5,7 @@ class HardDriveServices {
         const NewHardDrive = new HardDrive({
             Branch: info.Branch,
             Name: info.Name,
-            Type: info.Type,
+            PortType: info.PortType,
             Capacity: info.Capacity,
             ReadSpeed: info.ReadSpeed,
             WriteSpeed: info.WriteSpeed,
@@ -42,8 +42,8 @@ class HardDriveServices {
         if (new_info.Name) {
             HardDrive_target.Name = new_info.Name;
         }
-        if (new_info.Type) {
-            HardDrive_target.Type = new_info.Type;
+        if (new_info.PortType) {
+            HardDrive_target.PortType = new_info.PortType;
         }
         if (new_info.Capacity) {
             HardDrive_target.Capacity = new_info.Capacity;
@@ -75,7 +75,7 @@ class HardDriveServices {
         return HardDrive_target ? HardDrive_target : null;
     }
 
-    static async addLaptopInstallation(id, new_installation) {
+    static async createLaptopInstallation(id, new_installation) {
         let HardDrive_target = await HardDrive.findById(id);
 
         const OldLength = HardDrive_target.LaptopInstallations.length;
