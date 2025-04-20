@@ -8,7 +8,7 @@ const GPU_services = require("../services/GPU_services");
 
 async function connectToDB() {
     await mongoose.connect(process.env.DB_URI);
-    console.log(`${DateServices.getTimeCurrent()} Connected GPU controller to database successfully! ^-^`);
+    console.log(`${DateServices.getTimeCurrent()} Connected gpu controller to database successfully! ^-^`);
 }
 
 connectToDB();

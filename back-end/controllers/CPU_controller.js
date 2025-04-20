@@ -8,7 +8,7 @@ const CPUServices = require("../services/CPU_services");
 
 async function connectToDB() {
     await mongoose.connect(process.env.DB_URI);
-    console.log(`${DateServices.getTimeCurrent()} Connected CPU controller to database successfully! ^-^`);
+    console.log(`${DateServices.getTimeCurrent()} Connected cpu controller to database successfully! ^-^`);
 
 }
 
