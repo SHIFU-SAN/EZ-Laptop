@@ -153,4 +153,6 @@ fabric.properties
 # https://plugins.jetbrains.com/plugin/8053-azure-toolkit-for-intellij
 .idea/**/azureSettings.xml
 
+package-lock.json
+
 # End of https://www.toptal.com/developers/gitignore/api/webstorm,nextjs,dotenv
