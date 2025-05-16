@@ -55,7 +55,7 @@ function SignUpPage() {
     }
 
     return <>
-        <div className="min-h-screen py-4 bg-green overflow-auto md:flex md:flex-col md:items-center">
+        <div className="min-h-screen py-12 bg-green overflow-auto md:flex md:flex-col md:items-center">
             <section className="w-full md:max-w-3/4 lg:max-w-1/3 px-2 md:px-0">
                 <Image
                     src={Logo}
@@ -110,7 +110,7 @@ function SignUpPage() {
                 </form>
             </section>
             <SwitchModeButton
-                className="absolute top-4 right-4 p-2 bg-bg border-1 border-[#ccc] rounded-lg active:bg-[#FFB433] active:text-lg active:outline-2 active:outline-offset-2 "/>
+                className="absolute top-2 right-2"/>
         </div>
     </>
 }
