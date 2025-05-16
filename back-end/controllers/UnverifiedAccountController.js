@@ -38,7 +38,7 @@ class UnverifiedAccountController {
 
     static async removeUnverifiedAccount(req, res) {
         try {
-            const unverifiedAccount = await UnverifiedAccountServices.deleteUnverifiedAccount(req.params.id);
+            const unverifiedAccount = await UnverifiedAccountServices.deleteUnverifiedAccount(req.query.email);
             res.status(200).json(unverifiedAccount);
         } catch (error) {
             res.status(400);

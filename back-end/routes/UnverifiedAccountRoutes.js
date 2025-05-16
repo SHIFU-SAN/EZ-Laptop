@@ -9,6 +9,6 @@ app.use(express.json());
 router
     .post('/add', UnverifiedAccountController.addUnverifiedAccount)
     .put('/save', UnverifiedAccountController.saveUnverifiedAccount)
-    .delete('/delete/:id', UnverifiedAccountController.removeUnverifiedAccount);
+    .delete('/delete/account', UnverifiedAccountController.removeUnverifiedAccount);
 
 module.exports = router;
