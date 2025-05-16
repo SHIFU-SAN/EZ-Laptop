@@ -7,6 +7,8 @@ const UnverifiedAccountController = require('../controllers/UnverifiedAccountCon
 app.use(express.json());
 
 router
-    .post('/add', UnverifiedAccountController.addUnverifiedAccount);
+    .post('/add', UnverifiedAccountController.addUnverifiedAccount)
+    .put('/save', UnverifiedAccountController.saveUnverifiedAccount)
+    .delete('/delete/:id', UnverifiedAccountController.removeUnverifiedAccount);
 
 module.exports = router;

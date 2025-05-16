@@ -25,6 +25,26 @@ class UnverifiedAccountController {
             console.log(`${DateServices.getTimeCurrent()} Can't add unverified account! Error: ${error}`);
         }
     }
+
+    static async saveUnverifiedAccount(req, res) {
+        try {
+            const unverifiedAccount = await UnverifiedAccountServices.saveUnverifiedAccount(req.body.email);
+            res.status(200).json(unverifiedAccount);
+        } catch (error) {
+            res.status(400);
+            console.log(`${DateServices.getTimeCurrent()} Can't save unverified account! Error: ${error}`);
+        }
+    }
+
+    static async removeUnverifiedAccount(req, res) {
+        try {
+            const unverifiedAccount = await UnverifiedAccountServices.deleteUnverifiedAccount(req.params.id);
+            res.status(200).json(unverifiedAccount);
+        } catch (error) {
+            res.status(400);
+            console.log(`${DateServices.getTimeCurrent()} Can't remove unverified account! Error: ${error}`);
+        }
+    }
 }
 
 module.exports = UnverifiedAccountController;
