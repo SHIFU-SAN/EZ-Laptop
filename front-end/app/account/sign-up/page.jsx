@@ -9,6 +9,8 @@ import SwitchModeButton from "../../../components/switch-mode-button";
 import Logo from "../../../assets/images/logo/EZ-Laptop-logo.png";
 import {MdDarkMode, MdLightMode} from "react-icons/md";
 
+const BASE_API = "http://127.0.0.1:3080";
+
 function SignUpPage() {
     const router = useRouter();
 
@@ -38,19 +40,31 @@ function SignUpPage() {
         setName(event.target.value);
     }
 
-    function signUp(formData) {
+    async function signUp(formData) {
         if (formData.get('Password') !== formData.get('ConfirmPassword')) {
             alert('Mật khẩu không khớp!');
         } else {
-            const NewAccount = {
-                Email: formData.get('Email'),
-                PhoneNumber: formData.get('Phone'),
-                Username: formData.get('Username'),
-                Password: password,
-                Name: formData.get('Name')
-            }
+            try {
+                const NewAccount = {
+                    Email: formData.get('Email'),
+                    PhoneNumber: formData.get('Phone'),
+                    Username: formData.get('Username'),
+                    Password: password,
+                    Name: formData.get('Name')
+                }
 
-            router.push(`/account/authentication?email=${NewAccount.Email}`);
+                await fetch(`${BASE_API}/api/unverified_account/add`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(NewAccount)
+                });
+
+                router.push(`/account/authentication?email=${NewAccount.Email}`);
+            } catch (err) {
+                console.error(`Failed to sign up! Error: ${err}`)
+            }
         }
     }
 
