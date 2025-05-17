@@ -1,11 +1,28 @@
+"use client";
+"use strict";
+
+import {useEffect} from 'react';
+
 import "../assets/css/globals.css";
 
 function RootLayout({children}) {
+    function checkSelectedTheme() {
+        const SelectedTheme = localStorage.getItem('theme');
+        if (!SelectedTheme) {
+            localStorage.setItem('theme', 'light');
+        } else if (SelectedTheme === 'dark' && !document.documentElement.classList.contains('dark')) {
+            localStorage.setItem('theme', 'dark');
+            document.documentElement.classList.toggle('dark');
+        }
+    }
+
+    useEffect(checkSelectedTheme, []);
+
     return (
         <html lang="en">
-        <body>{children}</body>
+        <body className="bg-bg text-text">{children}</body>
         </html>
     )
 }
 
-module.exports = RootLayout;
+export default RootLayout;

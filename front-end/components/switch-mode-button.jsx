@@ -1,12 +1,18 @@
 "use client";
 "use strict";
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {MdLightMode, MdDarkMode} from "react-icons/md";
 
 function SwitchModeButton({className}) {
     const [isDark, setIsDark] = useState(false);
 
     function switchMode() {
+        const theme = localStorage.getItem('theme');
+        if (theme != 'dark') {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
         setIsDark(!isDark);
         document.documentElement.classList.toggle('dark');
     }
