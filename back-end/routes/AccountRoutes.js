@@ -10,6 +10,7 @@ router
     .post('/add', AccountController.addAccount)
     .get('/list', AccountController.getAccountsList)
     .get('/:id', AccountController.getAccountByID)
+    .get('/info/check', AccountController.checkAccountExistByEmail)
     .put('/:id', AccountController.setAccount)
     .delete('/:id', AccountController.removeAccount);
 

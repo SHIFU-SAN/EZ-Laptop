@@ -69,6 +69,16 @@ class AccountController {
             console.error(`${DateServices.getTimeCurrent()} Can't delete account! Error: ${err}`)
         }
     }
+
+    static async checkAccountExistByEmail(req, res) {
+        try {
+            const AccountTarget = await AccountServices.findAccountByEmail(req.query.email);
+            return res.status(200).json(AccountTarget ? true : false);
+        } catch (err) {
+            res.status(400);
+            console.error(`${DateServices.getTimeCurrent()} Can't check account exist by email! Error: ${err}`)
+        }
+    }
 }
 
 module.exports = AccountController;

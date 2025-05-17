@@ -13,7 +13,7 @@ class AccountServices {
         });
 
         await NewAccount.save();
-        return NewAccount ? NewAccout : null;
+        return NewAccount ? NewAccount : null;
     }
 
     static async readAccounts() {
@@ -58,6 +58,11 @@ class AccountServices {
     static async deleteAccount(id) {
         const AccountDeleted = await Account.findByIdAndDelete(id);
         return AccountDeleted ? AccountDeleted : null;
+    }
+
+    static async findAccountByEmail(email) {
+        const AccountTarget = await Account.findOne({Email: email.toString()});
+        return AccountTarget ? AccountTarget : null;
     }
 }
 

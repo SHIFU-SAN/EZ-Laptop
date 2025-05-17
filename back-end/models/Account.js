@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const AccountSchema = new Schema({
-    PhoneNumber: {
+    Email: {
         type: String,
         required: true,
         unique: true
     },
-    Email: {
+    PhoneNumber: {
         type: String,
         required: true,
         unique: true
