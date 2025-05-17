@@ -41,30 +41,47 @@ function SignUpPage() {
     }
 
     async function signUp(formData) {
-        if (formData.get('Password') !== formData.get('ConfirmPassword')) {
-            alert('Mật khẩu không khớp!');
-        } else {
-            try {
-                const NewAccount = {
-                    Email: formData.get('Email'),
-                    PhoneNumber: formData.get('Phone'),
-                    Username: formData.get('Username'),
-                    Password: password,
-                    Name: formData.get('Name')
+        try {
+            const Email = formData.get('Email');
+            const Password = formData.get('Password');
+
+            let isExisted = null;
+            await fetch(`${BASE_API}/api/account/info/check?email=${Email}`)
+                .then(res => res.json())
+                .then(data => isExisted = data)
+
+            if (isExisted) {
+                alert('Tài khoản đã tồn tại!');
+                return;
+            } else if (Password !== formData.get('ConfirmPassword')) {
+                alert('Mật khẩu không khớp!');
+                return;
+            } else {
+                try {
+                    const NewAccount = {
+                        Email: Email,
+                        PhoneNumber: formData.get('Phone'),
+                        Username: formData.get('Username'),
+                        Password: Password,
+                        Name: formData.get('Name')
+                    }
+
+                    await fetch(`${BASE_API}/api/unverified_account/add`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(NewAccount)
+                    });
+
+                    router.push(`/account/authentication?email=${NewAccount.Email}`);
+                } catch (err) {
+                    console.error(`Failed to sign up! Error: ${err}`)
                 }
-
-                await fetch(`${BASE_API}/api/unverified_account/add`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(NewAccount)
-                });
-
-                router.push(`/account/authentication?email=${NewAccount.Email}`);
-            } catch (err) {
-                console.error(`Failed to sign up! Error: ${err}`)
             }
+
+        } catch (err) {
+            console.error(`Failed to check existed account! Error: ${err}`)
         }
     }
 
