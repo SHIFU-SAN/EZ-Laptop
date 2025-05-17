@@ -74,7 +74,7 @@ function SignUpPage() {
                         body: JSON.stringify(NewAccount)
                     });
 
-                    router.push(`/account/authentication?email=${NewAccount.Email}`);
+                    router.push(`/account/authentication?method=sign-up&email=${Email}`);
                 } catch (err) {
                     console.error(`Failed to sign up! Error: ${err}`)
                 }
