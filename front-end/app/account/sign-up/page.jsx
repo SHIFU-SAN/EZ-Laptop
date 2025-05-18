@@ -4,10 +4,9 @@
 import {useState} from 'react';
 import {useRouter} from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
-import SwitchModeButton from "../../../components/switch-mode-button";
 import Logo from "../../../assets/images/logo/EZ-Laptop-logo.png";
-import {MdDarkMode, MdLightMode} from "react-icons/md";
 
 const BASE_API = "http://127.0.0.1:3080";
 
@@ -138,10 +137,11 @@ function SignUpPage() {
                             className="w-1/2 py-2 bg-[#FFB433] font-bold rounded-lg justify-self-center active:bg-[#ccc] active:outline-2 active:outline-offset-2">Đăng
                         ký
                     </button>
+                    <br/>
+                    <span className="font-light text-center">Đã có tài khoản? <Link href="/account/login"
+                                                                                    className="underline font-bold active:text-[#ccc]">Đăng nhập</Link></span>
                 </form>
             </section>
-            <SwitchModeButton
-                className="absolute top-2 right-2"/>
         </div>
     </>
 }
