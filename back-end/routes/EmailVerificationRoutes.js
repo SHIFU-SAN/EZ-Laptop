@@ -8,7 +8,6 @@ app.use(express.json());
 
 router
     .post('/add', EmailVerificationController.addEmailVerification)
-    .get('/check/info', EmailVerificationController.checkCode)
-    .delete('/delete', EmailVerificationController.removeCode)
+    .put('/check', EmailVerificationController.checkCode);
 
 module.exports = router;

@@ -17,14 +17,20 @@ class UnverifiedAccountServices {
         return NewUnverifiedAccount ? NewUnverifiedAccount : null;
     }
 
-    static async saveUnverifiedAccount(email) {
-        const UnverifiedAccountTarget = await UnverifiedAccount.findOne({Email: email});
-        return AccountServices.createAccount(UnverifiedAccountTarget);
+    static async checkIfUnverifiedAccountExist(email, password) {
+        const AccountFound = await UnverifiedAccount.findOne({Email: email, Password: password});
+        return AccountFound ? AccountFound : null;
     }
 
-    static async deleteUnverifiedAccount(email) {
-        const UnverifiedAccountDeleted = await UnverifiedAccount.findOneAndDelete({Email: email});
-        return UnverifiedAccountDeleted ? UnverifiedAccountDeleted : null;
+    static async convertToVerifiedAccount(email) {
+        const UnverifiedAccountTarget = await UnverifiedAccount.findOne({Email: email});
+        const NewVerifiedAccount = await AccountServices.createAccount(UnverifiedAccountTarget);
+        return NewVerifiedAccount ? NewVerifiedAccount : null;
+    }
+
+    static async deleteUnverifiedAccountsByEmail(email) {
+        const NumberOfAccountsDeleted = await UnverifiedAccount.deleteMany({Email: email});
+        return NumberOfAccountsDeleted;
     }
 }
 

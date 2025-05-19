@@ -18,31 +18,24 @@ app.use(express.json());
 class UnverifiedAccountController {
     static async addUnverifiedAccount(req, res) {
         try {
-            const unverifiedAccount = await UnverifiedAccountServices.createUnverifiedAccount(req.body);
-            res.status(200).json(unverifiedAccount);
+            //Check if unverified account exist
+            const AccountFound = await UnverifiedAccountServices.checkIfUnverifiedAccountExist(req.body.Email, req.body.Password);
+            // If unverified account don't exist then create one
+            if (!AccountFound) {
+                const NewUnverifiedAccount = await UnverifiedAccountServices.createUnverifiedAccount(req.body);
+                res.status(201).json(NewUnverifiedAccount);
+
+                // Delete unverified account after 30 minutes
+                setTimeout(async () => {
+                    await UnverifiedAccountServices.deleteUnverifiedAccount(NewUnverifiedAccount._id);
+                    console.log("Deleted unverified account after 30 minutes successfully! ^-^")
+                }, 1800000);
+            } else {
+                res.status(201).json(AccountFound);
+            }
         } catch (error) {
             res.status(400);
             console.log(`${DateServices.getTimeCurrent()} Can't add unverified account! Error: ${error}`);
-        }
-    }
-
-    static async saveUnverifiedAccount(req, res) {
-        try {
-            const unverifiedAccount = await UnverifiedAccountServices.saveUnverifiedAccount(req.body.email);
-            res.status(200).json(unverifiedAccount);
-        } catch (error) {
-            res.status(400);
-            console.log(`${DateServices.getTimeCurrent()} Can't save unverified account! Error: ${error}`);
-        }
-    }
-
-    static async removeUnverifiedAccount(req, res) {
-        try {
-            const unverifiedAccount = await UnverifiedAccountServices.deleteUnverifiedAccount(req.query.email);
-            res.status(200).json(unverifiedAccount);
-        } catch (error) {
-            res.status(400);
-            console.log(`${DateServices.getTimeCurrent()} Can't remove unverified account! Error: ${error}`);
         }
     }
 }
