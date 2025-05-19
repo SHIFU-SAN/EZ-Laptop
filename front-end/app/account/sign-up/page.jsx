@@ -39,11 +39,13 @@ function SignUpPage() {
         setName(event.target.value);
     }
 
+    // handle sign-up button
     async function signUp(formData) {
         try {
             const Email = formData.get('Email');
             const Password = formData.get('Password');
 
+            // check existed account
             let isExisted = null;
             await fetch(`${BASE_API}/api/account/info/check?email=${Email}`)
                 .then(res => res.json())
@@ -51,11 +53,10 @@ function SignUpPage() {
 
             if (isExisted) {
                 alert('Tài khoản đã tồn tại!');
-                return;
-            } else if (Password !== formData.get('ConfirmPassword')) {
+            } else if (Password !== formData.get('ConfirmPassword')) { // compare password & confirm password
                 alert('Mật khẩu không khớp!');
-                return;
             } else {
+                // sign up
                 try {
                     const NewAccount = {
                         Email: Email,
