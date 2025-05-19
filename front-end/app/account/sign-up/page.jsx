@@ -61,9 +61,9 @@ function SignUpPage() {
                     const NewAccount = {
                         Email: Email,
                         PhoneNumber: formData.get('Phone'),
+                        Name: formData.get('Name'),
                         Username: formData.get('Username'),
-                        Password: Password,
-                        Name: formData.get('Name')
+                        Password: Password
                     }
 
                     await fetch(`${BASE_API}/api/unverified_account/add`, {
@@ -105,6 +105,11 @@ function SignUpPage() {
                            placeholder="Nhập số điện thoại ở đây..."
                            className="px-2 py-1 outline-none border-1 border-[#ccc] rounded-lg placeholder:text-gray"/>
                     <br/>
+                    <label htmlFor="Name">Họ & tên<span className="text-red-500">*</span>:</label>
+                    <input onChange={onChangeName} type="text" id="Name" name="Name" value={name}
+                           placeholder="Nhập họ và tên ở đây..." required
+                           className="px-2 py-1 outline-none border-1 border-[#ccc] rounded-lg placeholder:text-gray"/>
+                    <br/>
                     <label htmlFor="Username">Tên người dùng<span className="text-red-500">*</span>:</label>
                     <input onChange={onChangeUsername} type="text" id="Username" name="Username" value={username}
                            placeholder="Nhập tên người dùng ở đây..."
@@ -127,11 +132,6 @@ function SignUpPage() {
                     <label htmlFor="ConfirmPassword">Nhập lại mật khẩu<span className="text-red-500">*</span>:</label>
                     <input type="password" id="ConfirmPassword" name="ConfirmPassword" minLength="8"
                            placeholder="Nhập lại mật khẩu ở đây..." required
-                           className="px-2 py-1 outline-none border-1 border-[#ccc] rounded-lg placeholder:text-gray"/>
-                    <br/>
-                    <label htmlFor="Name">Họ & tên<span className="text-red-500">*</span>:</label>
-                    <input onChange={onChangeName} type="text" id="Name" name="Name" value={name}
-                           placeholder="Nhập họ và tên ở đây..." required
                            className="px-2 py-1 outline-none border-1 border-[#ccc] rounded-lg placeholder:text-gray"/>
                     <br/>
                     <button type="submit" value="Submit"
