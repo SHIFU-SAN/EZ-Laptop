@@ -189,8 +189,8 @@ class EmailVerificationController {
             const CodeID = NewEmailVerification._id;
             setTimeout(async () => {
                 await EmailVerificationServices.deleteCodeByID(CodeID);
-                console.log(`${DateServices.getTimeCurrent()} Code is deleted after 30 seconds successfully! ^-^`);
-            }, 30000);
+                console.log(`${DateServices.getTimeCurrent()} Code is deleted after 60 seconds successfully! ^-^`);
+            }, 60000);
 
             return res.status(201).json(NewEmailVerification);
         } catch (err) {
