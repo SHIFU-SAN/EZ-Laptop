@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer');
 const DateServices = require("../services/DateServices");
 const EmailVerificationServices = require("../services/EmailVerificationServices");
 const UnverifiedAccountServices = require("../services/UnverifiedAccountServices");
+const CartServices = require("../services/CartServices");
 
 async function connectToDB() {
     try {
@@ -224,15 +225,19 @@ class EmailVerificationController {
                     } else {
                         //Sign up
                         try {
+                            // Create new account and cart
                             const NewAccount = await UnverifiedAccountServices.convertToVerifiedAccount(Email);
+                            const NewCart = await CartServices.createCart({CustomerID: NewAccount._id});
+                            // Delete unverified account
                             const NumberOfAccountsRemoved = await UnverifiedAccountServices.deleteUnverifiedAccountsByEmail(Email);
                             return res.status(202).json({
                                 Verify: true,
                                 Account: NewAccount,
+                                Cart: NewCart,
                                 NumberOfAccountsRemoved: NumberOfAccountsRemoved
                             });
                         } catch (err) {
-                            return res.status(202).send({
+                            return res.status(400).send({
                                 message: `Can't sign up! Error: ${err}`
                             });
                         }
