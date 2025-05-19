@@ -66,7 +66,7 @@ function SignUpPage() {
                         Password: Password
                     }
 
-                    await fetch(`${BASE_API}/api/unverified_account/add`, {
+                    await fetch(`${BASE_API}/api/unverified-account/add`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
