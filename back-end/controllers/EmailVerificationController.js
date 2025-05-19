@@ -213,37 +213,33 @@ class EmailVerificationController {
                 // Get authentication method
                 const AuthenticationMethod = req.body.Method;
 
-                if (AuthenticationMethod !== 'login') {
-                    if (AuthenticationMethod !== 'sign-up') {
-                        if (AuthenticationMethod !== 'reset-password') {
-                            return res.status(405).send({
-                                message: `Invalid method! Error: ${err}`
-                            });
-                        } else {
-                            // Reset password
-                        }
+                if (AuthenticationMethod !== 'sign-up') {
+                    if (AuthenticationMethod !== 'reset-password') {
+                        return res.status(405).send({
+                            message: `Invalid method! Error: ${err}`
+                        });
                     } else {
-                        //Sign up
-                        try {
-                            // Create new account and cart
-                            const NewAccount = await UnverifiedAccountServices.convertToVerifiedAccount(Email);
-                            const NewCart = await CartServices.createCart({CustomerID: NewAccount._id});
-                            // Delete unverified account
-                            const NumberOfAccountsRemoved = await UnverifiedAccountServices.deleteUnverifiedAccountsByEmail(Email);
-                            return res.status(202).json({
-                                Verify: true,
-                                Account: NewAccount,
-                                Cart: NewCart,
-                                NumberOfAccountsRemoved: NumberOfAccountsRemoved
-                            });
-                        } catch (err) {
-                            return res.status(400).send({
-                                message: `Can't sign up! Error: ${err}`
-                            });
-                        }
+                        // Reset password
                     }
                 } else {
-                    // Login
+                    //Sign up
+                    try {
+                        // Create new account and cart
+                        const NewAccount = await UnverifiedAccountServices.convertToVerifiedAccount(Email);
+                        const NewCart = await CartServices.createCart({CustomerID: NewAccount._id});
+                        // Delete unverified account
+                        const NumberOfAccountsRemoved = await UnverifiedAccountServices.deleteUnverifiedAccountsByEmail(Email);
+                        return res.status(202).json({
+                            Verify: true,
+                            Account: NewAccount,
+                            Cart: NewCart,
+                            NumberOfAccountsRemoved: NumberOfAccountsRemoved
+                        });
+                    } catch (err) {
+                        return res.status(400).send({
+                            message: `Can't sign up! Error: ${err}`
+                        });
+                    }
                 }
             }
         } catch (err) {
