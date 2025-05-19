@@ -26,6 +26,11 @@ class AccountServices {
         return AccountTarget ? AccountTarget : null;
     }
 
+    static async readAccountByEmailAndPassword(email, password) {
+        const AccountTarget = await Account.findOne({Email: email, Password: password});
+        return AccountTarget ? AccountTarget : null;
+    }
+
     static async updateAccount(id, new_info) {
         let AccountTarget = await Account.findById(id);
 

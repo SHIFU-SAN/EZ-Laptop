@@ -7,6 +7,7 @@ const AccountController = require('../controllers/AccountController');
 app.use(express.json());
 
 router
+    .post('/check-password', AccountController.checkPassword)
     .get('/list', AccountController.getAccountsList)
     .get('/:id', AccountController.getAccountByID)
     .get('/info/check', AccountController.checkAccountExistByEmail)

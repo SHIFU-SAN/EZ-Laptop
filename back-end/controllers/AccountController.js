@@ -2,9 +2,11 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
 
 const DateServices = require("../services/DateServices");
 const AccountServices = require("../services/AccountServices");
+const RefreshTokenServices = require("../services/RefreshTokenServices");
 
 async function connectToDB() {
     try {
@@ -37,6 +39,45 @@ class AccountController {
         } catch (err) {
             res.status(400);
             console.error(`${DateServices.getTimeCurrent()} Can't get account by ID! Error: ${err}`)
+        }
+    }
+
+    static async checkPassword(req, res) {
+        try {
+            // Check password
+            const AccountTarget = await AccountServices.readAccountByEmailAndPassword(req.body.Email, req.body.Password);
+            // Create access token & refresh token
+            const UserID = AccountTarget._id;
+            const UserPermission = AccountTarget.Permission;
+            const Payload = {
+                _id: UserID,
+                Permission: UserPermission
+            }
+            const AccessToken = jwt.sign(Payload, process.env.ACCESS_SECRET_KEY, {expiresIn: '1h'});
+            const RefreshToken = jwt.sign(Payload, process.env.REFRESH_SECRET_KEY);
+            // Save refresh token to db
+            try {
+                const NewRefreshToken = await RefreshTokenServices.createRefreshToken(RefreshToken);
+                return res.status(202).json({
+                    Verify: true,
+                    ID: UserID,
+                    Permission: UserPermission,
+                    AccessToken: AccessToken,
+                    RefreshToken: NewRefreshToken.Value
+                });
+            } catch (err) {
+                console.error(`${DateServices.getTimeCurrent()} Can't create refresh token! Error: ${err}`);
+                return res.status(400).send({
+                    Message: "Can't create refresh token!",
+                    Error: err
+                });
+            }
+        } catch (err) {
+            res.status(401).send({
+                Message: "Wrong password!",
+                Error: err
+            });
+            console.error(`${DateServices.getTimeCurrent()} Can't check password! Error: ${err}`)
         }
     }
 
