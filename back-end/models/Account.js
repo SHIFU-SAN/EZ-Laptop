@@ -7,21 +7,16 @@ const AccountSchema = new Schema({
         required: true,
         unique: true
     },
-    PhoneNumber: {
-        type: String,
-        required: true,
-        unique: true
-    },
+    PhoneNumber: String,
+    Name: String,
     Username: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     Password: {
         type: String,
         required: true
     },
-    Name: String,
     Avatar: {
         type: String,
         default: "E:\\Workspace\\Project\\EZ-Laptop\\back-end\\Images\\Avatar\\EmptyAvatar.png"
