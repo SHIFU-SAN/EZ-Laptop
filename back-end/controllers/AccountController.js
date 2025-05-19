@@ -20,16 +20,6 @@ connectToDB();
 app.use(express.json());
 
 class AccountController {
-    static async addAccount(req, res) {
-        try {
-            const NewAccount = await AccountServices.createAccount(req.body);
-            return res.status(201).json(NewAccount);
-        } catch (err) {
-            res.status(400);
-            console.error(`${DateServices.getTimeCurrent()} Can't add account! Error: ${err}`)
-        }
-    }
-
     static async getAccountsList(req, res) {
         try {
             const AccountsList = await AccountServices.readAccounts()
