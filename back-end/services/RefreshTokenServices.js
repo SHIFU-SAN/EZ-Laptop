@@ -5,6 +5,9 @@ class RefreshTokenServices {
         const NewRefreshToken = new RefreshToken({
             Value: value
         });
+
+        await NewRefreshToken.save();
+
         return NewRefreshToken ? NewRefreshToken : null;
     }
 
