@@ -56,6 +56,10 @@ class AccountServices {
             AccountTarget.Permission = new_info.Permission;
         }
 
+        if (new_info.AllowUpdate) {
+            AccountTarget.AllowUpdate = new_info.AllowUpdate;
+        }
+
         await AccountTarget.save();
         return AccountTarget ? AccountTarget : null;
     }

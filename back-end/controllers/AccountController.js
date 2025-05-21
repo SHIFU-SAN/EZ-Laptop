@@ -83,11 +83,38 @@ class AccountController {
 
     static async setAccount(req, res) {
         try {
-            const AccountTarget = await AccountServices.updateAccount(req.params.id, req.body);
+            const AccountTarget = await AccountServices.updateAccount(req.body._id, req.body);
             return res.status(200).json(AccountTarget);
         } catch (err) {
             res.status(400);
             console.error(`${DateServices.getTimeCurrent()} Can't set account! Error: ${err}`)
+        }
+    }
+
+    static async resetPassword(req, res) {
+        const Email = req.body.Email;
+        try {
+            const AccountFound = await AccountServices.findAccountByEmail(Email);
+            if (!AccountFound.AllowUpdate) {
+                return res.status(401).send({
+                    Message: "Account isn't allow to update password!"
+                });
+            } else {
+                await AccountServices.updateAccount(AccountFound._id, {
+                    Password: req.body.NewPassword,
+                    AllowUpdate: 'false'
+                });
+                return res.status(200).json({
+                    Verify: true,
+                    Message: "Reset password successfully!"
+                })
+            }
+        } catch (err) {
+            console.log(`Can't reset password for ${Email}! Error: ${err}`);
+            res.status(400).send({
+                Message: "Can't reset password!",
+                Error: err
+            })
         }
     }
 

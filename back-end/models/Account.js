@@ -24,6 +24,10 @@ const AccountSchema = new Schema({
     Permission: {
         type: String,
         default: "Customer"
+    },
+    AllowUpdate: {
+        type: Boolean,
+        default: false
     }
 });
 

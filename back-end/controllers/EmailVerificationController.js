@@ -5,9 +5,10 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');
 
 const DateServices = require("../services/DateServices");
+const AccountServices = require("../services/AccountServices");
+const CartServices = require("../services/CartServices");
 const EmailVerificationServices = require("../services/EmailVerificationServices");
 const UnverifiedAccountServices = require("../services/UnverifiedAccountServices");
-const CartServices = require("../services/CartServices");
 
 async function connectToDB() {
     try {
@@ -216,10 +217,25 @@ class EmailVerificationController {
                 if (AuthenticationMethod !== 'sign-up') {
                     if (AuthenticationMethod !== 'reset-password') {
                         return res.status(405).send({
-                            message: `Invalid method! Error: ${err}`
+                            Message: `Invalid method! Error: ${err}`
                         });
                     } else {
                         // Reset password
+                        try {
+                            // Allow account to be updated
+                            const AccountFound = await AccountServices.findAccountByEmail(Email);
+                            const NewInfo = await AccountServices.updateAccount(AccountFound._id, {AllowUpdate: true});
+                            return res.status(202).json({
+                                Verify: true,
+                                AllowUpdate: NewInfo.AllowUpdate
+                            });
+                        } catch (err) {
+                            console.log(`${DateServices.getTimeCurrent()} Can't reset password for ${Email} Error: ${err}`)
+                            return res.status(400).send({
+                                Message: `Can't reset password for ${Email}!`,
+                                Error: err
+                            })
+                        }
                     }
                 } else {
                     //Sign up
@@ -237,7 +253,7 @@ class EmailVerificationController {
                         });
                     } catch (err) {
                         return res.status(400).send({
-                            message: `Can't sign up! Error: ${err}`
+                            Message: `Can't sign up! Error: ${err}`
                         });
                     }
                 }
