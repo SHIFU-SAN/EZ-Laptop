@@ -56,7 +56,7 @@ function AuthenticationPage() {
         } catch (err) {
             console.error(`Can't get code! Error: ${err}`)
         }
-    };
+    }
 
 
     async function confirmEmail(formData) {
@@ -88,7 +88,7 @@ function AuthenticationPage() {
                         router.push('/account/login');
                         break;
                     case 'reset-password':
-                        //reset password logic
+                        router.push(`/account/reset-password?email=${Email}`)
                         break;
                 }
 

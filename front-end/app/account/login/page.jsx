@@ -99,7 +99,7 @@ function LoginPage() {
                         nhập
                     </button>
                     <br/>
-                    <span className="font-light text-center">Quên mật khẩu? <Link href="/account/reset-password"
+                    <span className="font-light text-center">Quên mật khẩu? <Link href="/account/reset-password/email"
                                                                                   className="underline font-bold active:text-[#ccc]">Lấy lại mật khẩu</Link></span>
                 </form>
             </section>
