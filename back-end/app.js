@@ -27,5 +27,6 @@ app
     }))
     .use(cookieParser())
     .use(express.json())
+    .use('/images', express.static('public/images'))
     .use('/*splat', (req, res) => res.status(404).send({message: "API not found!"}))
     .listen(Port, Host, () => console.log(`${DateServices.getTimeCurrent()} Server is running at: http://${Host}:${Port}`));
