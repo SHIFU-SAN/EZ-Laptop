@@ -1,0 +1,8 @@
+#Folders
+.idea/
+node_modules/
+back-end/public/images/avatars/*
+#Not ignore
+!back-end/public/images/avatars/EmptyAvatar.png
+back-end/public/images/laptops/
+.next/
