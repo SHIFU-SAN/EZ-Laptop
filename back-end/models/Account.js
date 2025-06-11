@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Role = require("./Role");
-
-const User = Role.findOne({Name: 'User'});
-
 const AccountSchema = new Schema({
     Email: {
         type: String,
@@ -21,12 +17,12 @@ const AccountSchema = new Schema({
     },
     Avatar: {
         type: String,
-        default: "/public/images/avatars/EmptyAvatar.png"
+        default: "/images/avatars/EmptyAvatar.png"
     },
     Role: {
         type: Schema.Types.ObjectId,
         ref: 'Role',
-        default: User?._id
+        required: true
     }
 });
 
