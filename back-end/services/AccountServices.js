@@ -21,6 +21,11 @@ class AccountServices {
         const AccountFound = await Account.findById(NewAccount?._id).populate('Role').exec();
         return AccountFound;
     }
+
+    static async findAccountByEmail(email) {
+        const AccountFound = await Account.findOne({Email: email});
+        return AccountFound;
+    }
 }
 
 module.exports = AccountServices;
