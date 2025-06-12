@@ -8,7 +8,7 @@ function RootLayout({children}) {
     <head>
         <title>EZ-Laptop</title>
     </head>
-    <body>{children}</body>
+    <body className="md:text-lg">{children}</body>
     </html>
 }
 

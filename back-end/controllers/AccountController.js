@@ -40,11 +40,15 @@ class AccountController {
                     if (!result) {
                         return res.status(401).send({
                             message: "Incorrect password!",
+                            isExist: true,
                             result
                         });
                     } else {
                         const Token = jwt.sign({id: AccountFound?._id}, process.env.SECRET_KEY, {expiresIn: "1d"});
-                        return res.status(200).cookie('token', Token, {httpOnly: true}).json({result});
+                        return res.status(200).cookie('token', Token, {httpOnly: true}).json({
+                            isExist: true,
+                            result
+                        });
                     }
                 });
             }
