@@ -23,7 +23,12 @@ class AccountServices {
     }
 
     static async findAccountByEmail(email) {
-        const AccountFound = await Account.findOne({Email: email});
+        const AccountFound = await Account.findOne({Email: email}).exec();
+        return AccountFound;
+    }
+
+    static async findAccountByID(id) {
+        const AccountFound = await Account.findById(id).populate('Role').exec();
         return AccountFound;
     }
 }

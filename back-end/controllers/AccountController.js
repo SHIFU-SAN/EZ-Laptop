@@ -60,6 +60,32 @@ class AccountController {
             })
         }
     }
+
+    static async getAccountById(req, res) {
+        try {
+            const AccountFound = await AccountServices.findAccountByID(req?.user_id);
+            return res.status(200).json(AccountFound);
+        } catch (err) {
+            console.log(`${DateServices.getTimeCurrent()} Can't get account by ID! ${err.message}`);
+            return res.status(400).send({
+                message: "Can't get account by ID!",
+                error: err.message
+            });
+        }
+    }
+
+    static async checkPermission(req, res, next) {
+        const AccountFound = await AccountServices.findAccountByID(req?.user_id);
+        const AccountPermissions = AccountFound.Role?.Permissions;
+        const CheckResult = req.permissions.every(permission => AccountPermissions.includes(permission));
+        if (!CheckResult) {
+            return res.status(403).send({
+                message: "You don't have permission!"
+            });
+        } else {
+            next();
+        }
+    }
 }
 
 module.exports = AccountController;
