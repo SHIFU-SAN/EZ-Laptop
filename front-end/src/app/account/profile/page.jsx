@@ -5,10 +5,9 @@ import {useState, useEffect, useRef} from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
-import {MdShoppingCart, MdContentPaste, MdLogout, MdPerson} from "react-icons/md";
+import {MdCreate, MdShoppingCart, MdContentPaste, MdLogout, MdPerson, MdUploadFile} from "react-icons/md";
 
 import Logo from "../../../../public/images/logos/EZ-Laptop-logo.png";
-import valueProcessor from "next/dist/build/webpack/loaders/resolve-url-loader/lib/value-processor.js";
 
 const BASE_API = "http://localhost:3080";
 
@@ -22,18 +21,23 @@ function TabHeader({onClick, className, children, disabled}) {
 
 function TabMain({children, className}) {
     return <main
-        className={"w-full h-[500px] p-2 md:p-4 rounded-tr-lg md:rounded-tl-lg rounded-b-lg bg-white shadow-md " + className}>{children}</main>
+        className={"w-full p-2 md:p-4 rounded-tr-lg md:rounded-tl-lg rounded-b-lg bg-white shadow-md " + className}>{children}</main>
 }
 
 function ProfilePage() {
     const router = useRouter();
 
     const navRef = useRef(null);
+    // ref of info tab
+    const newAvatarRef = useRef(null);
 
-    const [avatar, setAvatar] = useState("http://localhost:3080/images/avatars/EmptyAvatar.png");
     const [isLogout, setIsLogout] = useState(false);
     const [tab, setTab] = useState('InfoTab');
+    // state of info tab
+    const [avatar, setAvatar] = useState("http://localhost:3080/images/avatars/EmptyAvatar.png");
     const [user, setUser] = useState({});
+    const [isInfoEditing, setIsInfoEditing] = useState(false);
+    const [avatarName, setAvatarName] = useState("");
 
     async function getUserData(signal) {
         try {
@@ -114,7 +118,7 @@ function ProfilePage() {
                 <Image
                     onClick={() => setIsLogout(!isLogout)}
                     src={avatar}
-                    alt={user?.Name + "'s avatar"}
+                    alt={user?.Username + "'s avatar"}
                     fill={true}
                     sizes="(max-width: 768px) 48px, (max-width: 1200px) 60px, 60px"
                     className="object-cover rounded-full"
@@ -146,7 +150,68 @@ function ProfilePage() {
                     className='text-lg md:text-xl'/>Đơn
                     hàng</TabHeader>
             </ul>
-            {tab === 'InfoTab' && <TabMain>Thông tin cá nhân</TabMain>}
+            {tab === 'InfoTab' && <TabMain className="flex flex-col gap-4">
+                {/*show info part*/}
+                <div className="flex items-center gap-4">
+                    {/*avatar*/}
+                    <div className="relative w-[60px] h-[60px]">
+                        <Image
+                            src={avatar}
+                            alt={user?.Username + "'s avatar"}
+                            fill={true}
+                            sizes="(max-width: 768px) 60px, (max-width: 1200px) 60px, 60px"
+                            className="object-cover rounded-full"
+                        />
+                    </div>
+                    <div>
+                        <h2 className="font-bold text-xl">{user?.Username}</h2>
+                        <p className="underline">{user?.Email}</p>
+                    </div>
+                    <button onClick={() => setIsInfoEditing(!isInfoEditing)}
+                            className="outline-1 rounded-lg ml-4 p-2 bg-[#FFB433] text-xl cursor-pointer hover:bg-[#80CBC4] hover:text-white active:bg-[#B4EBE6]">
+                        <MdCreate/></button>
+                </div>
+                {/*edit info part*/}
+                {isInfoEditing && <div className="md:w-1/2 flex flex-col gap-4">
+                    {/*change avatar*/}
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor='AvatarInput'
+                               className="w-max outline-1 rounded-lg p-2 bg-[#FFB433] flex items-center gap-1 cursor-pointer hover:bg-[#80CBC4] hover:text-white acive:bg-[#B4EBE6]"
+                               ref={newAvatarRef}>Chọn ảnh đại diện mới<MdUploadFile/></label>
+                        <input onChange={e => setAvatarName(e.target?.files[0]?.name)} type='file' id='AvatarInput'
+                               hidden={true}/>
+                        {avatarName !== '' && <div className="outline-1 rounded-lg p-2">
+                            <h3 className="font-bold">Tệp đã chọn:</h3>
+                            <p>{avatarName}</p>
+                        </div>}
+                    </div>
+
+                    <form action="" className="flex flex-col gap-4">
+                        <div className="flex flex-col lg:flex-row gap-2 lg:items-center">
+                            <label htmlFor='Email' className='lg:min-w-[100px]'>Email mới:</label>
+                            <input type='Email' id='Email' name='Email' className="w-full outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập tên mới ở đây..."/>
+                        </div>
+                        <div className="flex flex-col lg:flex-row gap-2 lg:items-center">
+                            <label htmlFor='Username' className='lg:min-w-[130px]'>Biệt danh mới:</label>
+                            <input type='text' id='Username' name='Username'
+                                   className="w-full outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập biệt danh mới ở đây..."/>
+                        </div>
+                        <div className="flex flex-col lg:flex-row gap-2 lg:items-center">
+                            <label htmlFor='Password' className='min-w-[130px]'>Mật khẩu mới:</label>
+                            <input type='password' id='Password' name='Password'
+                                   className="w-full outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập mật khẩu mới ở đây..." minLength={8}
+                                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$"
+                                   title="Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt"/>
+                        </div>
+                        <button type='submit'
+                                className="w-max outline-1 rounded-lg px-8 py-2 bg-[#FFB433] self-center lg:self-start cursor-pointer hover:bg-[#80CBC4] hover:text-white acive:bg-[#B4EBE6]">Lưu
+                        </button>
+                    </form>
+                </div>}
+            </TabMain>}
             {tab === 'CartTab' && <TabMain>Giỏ hàng</TabMain>}
             {tab === 'OrderTab' && <TabMain>Đơn hàng</TabMain>}
         </div>
