@@ -34,7 +34,7 @@ function ProfilePage() {
     const [isLogout, setIsLogout] = useState(false);
     const [tab, setTab] = useState('InfoTab');
     // state of info tab
-    const [avatar, setAvatar] = useState("http://localhost:3080/images/avatars/EmptyAvatar.png");
+    const [avatar, setAvatar] = useState("http://localhost:3080/public/images/avatars/EmptyAvatar.png");
     const [user, setUser] = useState({});
     const [isInfoEditing, setIsInfoEditing] = useState(false);
     const [avatarName, setAvatarName] = useState("");
@@ -79,6 +79,43 @@ function ProfilePage() {
                 });
         } catch (err) {
             console.error(`Can't logout! Error: ${err.message}`);
+        }
+    }
+
+    async function updateInfo(formData) {
+        try {
+            const NewEmail = formData.get('Email');
+            const NewUsername = formData.get('Username');
+            const NewPassword = formData.get('Password');
+            if (NewEmail || NewUsername || NewPassword) {
+                await fetch(`${BASE_API}/account/info`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': "application/json"
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        Email: NewEmail,
+                        Username: NewUsername,
+                        Password: NewPassword
+                    })
+                }).then(res => res.json()).then(data => setUser(data));
+            }
+            if (newAvatarRef.current?.files[0]) {
+                formData.append('Avatar', newAvatarRef.current.files[0]);
+                await fetch(`${BASE_API}/account/avatar`, {
+                    method: 'PUT',
+                    credentials: 'include',
+                    body: formData
+                }).then(res => res.json()).then(data => {
+                    setUser(data);
+                    setAvatar(BASE_API + data.Avatar)
+                });
+            }
+            setIsInfoEditing(!isInfoEditing);
+            alert("Cập tài khoản thành công. ^-^");
+        } catch (err) {
+            console.error(`Can't update info! Error: ${err.message}`);
         }
     }
 
@@ -177,8 +214,9 @@ function ProfilePage() {
                     <div className="flex flex-col gap-2">
                         <label htmlFor='AvatarInput'
                                className="w-max outline-1 rounded-lg p-2 bg-[#FFB433] flex items-center gap-1 cursor-pointer hover:bg-[#80CBC4] hover:text-white acive:bg-[#B4EBE6]"
-                               ref={newAvatarRef}>Chọn ảnh đại diện mới<MdUploadFile/></label>
+                        >Chọn ảnh đại diện mới<MdUploadFile/></label>
                         <input onChange={e => setAvatarName(e.target?.files[0]?.name)} type='file' id='AvatarInput'
+                               ref={newAvatarRef}
                                hidden={true}/>
                         {avatarName !== '' && <div className="outline-1 rounded-lg p-2">
                             <h3 className="font-bold">Tệp đã chọn:</h3>
@@ -186,11 +224,13 @@ function ProfilePage() {
                         </div>}
                     </div>
 
-                    <form action="" className="flex flex-col gap-4">
+                    {/*update info*/}
+                    <form action={updateInfo} className="flex flex-col gap-4">
                         <div className="flex flex-col lg:flex-row gap-2 lg:items-center">
                             <label htmlFor='Email' className='lg:min-w-[100px]'>Email mới:</label>
-                            <input type='Email' id='Email' name='Email' className="w-full outline-1 border-none rounded-lg p-2"
-                                   placeholder="Nhập tên mới ở đây..."/>
+                            <input type='Email' id='Email' name='Email'
+                                   className="w-full outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập email mới ở đây..."/>
                         </div>
                         <div className="flex flex-col lg:flex-row gap-2 lg:items-center">
                             <label htmlFor='Username' className='lg:min-w-[130px]'>Biệt danh mới:</label>

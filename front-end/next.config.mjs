@@ -5,7 +5,7 @@ export default {
                 protocol: 'http',
                 hostname: 'localhost',
                 port: '3080',
-                pathname: '/images/**',
+                pathname: '/public/images/**',
                 search: ''
             }
         ]

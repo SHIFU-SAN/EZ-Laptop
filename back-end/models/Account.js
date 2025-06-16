@@ -17,7 +17,7 @@ const AccountSchema = new Schema({
     },
     Avatar: {
         type: String,
-        default: "/images/avatars/EmptyAvatar.png"
+        default: "/public/images/avatars/EmptyAvatar.png"
     },
     Role: {
         type: Schema.Types.ObjectId,

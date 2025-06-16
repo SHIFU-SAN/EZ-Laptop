@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const AccountServices = require("../services/AccountServices");
+const CartServices = require("../services/CartServices");
 const DateServices = require("../services/DateServices");
 
 class AccountController {
@@ -11,6 +12,7 @@ class AccountController {
             const AccountFound = await AccountServices.findAccountByEmail(req.body?.Email);
             if (!AccountFound) {
                 const NewAccount = await AccountServices.createAccount(req.body);
+                await CartServices.createCart(NewAccount._id);
                 return res.status(201).json(NewAccount);
             } else {
                 return res.status(422).send({
@@ -63,7 +65,7 @@ class AccountController {
 
     static async getAccountById(req, res) {
         try {
-            const AccountFound = await AccountServices.findAccountByID(req?.user_id);
+            const AccountFound = await AccountServices.findAccountByID(req.user_id);
             return res.status(200).json(AccountFound);
         } catch (err) {
             console.log(`${DateServices.getTimeCurrent()} Can't get account by ID! ${err.message}`);
@@ -75,7 +77,7 @@ class AccountController {
     }
 
     static async checkPermission(req, res, next) {
-        const AccountFound = await AccountServices.findAccountByID(req?.user_id);
+        const AccountFound = await AccountServices.findAccountByID(req.user_id);
         const AccountPermissions = AccountFound.Role?.Permissions;
         const CheckResult = req.permissions.every(permission => AccountPermissions.includes(permission));
         if (!CheckResult) {
@@ -84,6 +86,32 @@ class AccountController {
             });
         } else {
             next();
+        }
+    }
+
+    static async setInfo(req, res) {
+        try {
+            const AccountSet = await AccountServices.updateAccount(req.user_id, req.body);
+            return res.status(200).json(AccountSet);
+        } catch (err) {
+            console.log(`${DateServices.getTimeCurrent()} Can't set account info! Error: ${err.message}`);
+            return res.status(400).send({
+                message: "Can't set account info!",
+                error: err.message
+            });
+        }
+    }
+
+    static async setAvatar(req, res) {
+        try {
+            const AccountSet = await AccountServices.updateAccount(req.user_id, {Avatar: req?.file?.path});
+            return res.status(200).json(AccountSet);
+        } catch (err) {
+            console.log(`${DateServices.getTimeCurrent()} Can't set avatar! Error: ${err.message}`);
+            return res.status(400).send({
+                message: "Can't set avatar!",
+                error: err.message
+            })
         }
     }
 }
