@@ -189,7 +189,7 @@ function ProfilePage() {
             </ul>
             {tab === 'InfoTab' && <TabMain className="flex flex-col gap-4">
                 {/*show info part*/}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 md:gap-4">
                     {/*avatar*/}
                     <div className="relative w-[60px] h-[60px]">
                         <Image
@@ -205,7 +205,7 @@ function ProfilePage() {
                         <p className="underline">{user?.Email}</p>
                     </div>
                     <button onClick={() => setIsInfoEditing(!isInfoEditing)}
-                            className="outline-1 rounded-lg ml-4 p-2 bg-[#FFB433] text-xl cursor-pointer hover:bg-[#80CBC4] hover:text-white active:bg-[#B4EBE6]">
+                            className="outline-1 rounded-lg lg:ml-4 p-2 bg-[#FFB433] text-xl cursor-pointer hover:bg-[#80CBC4] hover:text-white active:bg-[#B4EBE6]">
                         <MdCreate/></button>
                 </div>
                 {/*edit info part*/}
