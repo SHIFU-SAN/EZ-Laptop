@@ -11,10 +11,10 @@ import Logo from "../../../../public/images/logos/EZ-Laptop-logo.png";
 
 const BASE_API = "http://localhost:3080";
 
-function TabHeader({onClick, className, children, disabled}) {
+function TabHeader({onClick, className, children, isDisabled}) {
     return <li onClick={onClick}
                className={"md:min-w-[160px] lg:min-w-[200px] border-t-2 md:border-t-0 md:border-b-2 border-r-2 md:border-r-0 rounded-t-lg md:rounded-tr-none md:rounded-bl-lg px-2 md:px-4 lg:px-8 py-1 md:py-4 flex items-center gap-1 " + className}
-               disabled={disabled}>
+               disabled={isDisabled}>
         {children}
     </li>
 }
@@ -129,13 +129,13 @@ function ProfilePage() {
         SelectedTab.classList.toggle('hover:bg-[#80CBC4]');
         SelectedTab.classList.toggle('active:bg-[#FFB433]');
 
-        //remove effect for current tab
-        e.target.classList.toggle('bg-[#B4EBE6]');
-        e.target.classList.toggle('cursor-pointer');
-        e.target.classList.toggle('hover:bg-[#80CBC4]');
-        e.target.classList.toggle('active:bg-[#FFB433]');
+        //remove effect from current tab
+        e.currentTarget.classList.toggle('bg-[#B4EBE6]');
+        e.currentTarget.classList.toggle('cursor-pointer');
+        e.currentTarget.classList.toggle('hover:bg-[#80CBC4]');
+        e.currentTarget.classList.toggle('active:bg-[#FFB433]');
         //add new effect for current tab
-        e.target.classList.toggle('bg-white');
+        e.currentTarget.classList.toggle('bg-white');
     }
 
     return <div className="h-screen bg-[#FBF8EF]">
@@ -172,18 +172,21 @@ function ProfilePage() {
                 <TabHeader onClick={e => {
                     setTab('InfoTab');
                     onChangeTab(e);
-                }} className="md:mt-4 bg-white"><MdPerson className='text-lg md:text-xl'/>Thông tin</TabHeader>
+                }} className="md:mt-4 bg-white" isDisabled={tab === 'InfoTab'}><MdPerson
+                    className='text-lg md:text-xl'/>Thông tin</TabHeader>
                 <TabHeader onClick={e => {
                     setTab('CartTab');
                     onChangeTab(e);
                 }}
-                           className="bg-[#B4EBE6] cursor-pointer hover:bg-[#80CBC4] active:bg-[#FFB433]"><MdShoppingCart
+                           className="bg-[#B4EBE6] cursor-pointer hover:bg-[#80CBC4] active:bg-[#FFB433]"
+                           isDisabled={tab === 'CartTab'}><MdShoppingCart
                     className='text-lg md:text-xl'/>Giỏ hàng</TabHeader>
                 <TabHeader onClick={e => {
                     setTab('OrderTab');
                     onChangeTab(e);
                 }}
-                           className="bg-[#B4EBE6] cursor-pointer hover:bg-[#80CBC4] active:bg-[#FFB433]"><MdContentPaste
+                           className="bg-[#B4EBE6] cursor-pointer hover:bg-[#80CBC4] active:bg-[#FFB433]"
+                           isDisabled={tab === 'OrderTab'}><MdContentPaste
                     className='text-lg md:text-xl'/>Đơn
                     hàng</TabHeader>
             </ul>
