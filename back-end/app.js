@@ -31,6 +31,6 @@ app
     .use(express.json())
     .use('/public/images', express.static('public/images'))
     .use('/account', account_routes)
-    .use('/roles', role_routes)
+    .use('/role', role_routes)
     .use('/*splat', (req, res) => res.status(404).send({message: "API not found!"}))
     .listen(Port, Host, () => console.log(`${DateServices.getTimeCurrent()} Server is running at: http://${Host}:${Port}`));

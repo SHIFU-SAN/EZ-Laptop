@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const fs = require('fs');
+const mongoose = require('mongoose');
 require('dotenv').config();
 const Salt = process.env.SALT;
 
@@ -58,7 +59,7 @@ class AccountServices {
             }
         }
         if (new_info?.Role && new_info.Role !== AccountFound.Role) {
-            AccountFound.Role = new_info.Role;
+            AccountFound.Role = new mongoose.Types.ObjectId(new_info.Role);
         }
         await AccountFound.save();
         AccountFound = await Account.findById(AccountFound._id).populate('Role').exec();
@@ -66,7 +67,7 @@ class AccountServices {
     }
 
     static async deleteAccount(id) {
-        const AccountDeleted = await Account.findByIdAndDelete(id);
+        const AccountDeleted = await Account.findByIdAndDelete(id).exec();
         return AccountDeleted;
     }
 }

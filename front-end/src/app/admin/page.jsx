@@ -6,12 +6,18 @@ import Image from "next/image";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {BsGpuCard} from "react-icons/bs";
-import {MdAssignmentTurnedIn, MdLogout, MdLaptop, MdPerson} from "react-icons/md";
+import {MdAssignmentTurnedIn, MdDelete, MdLogout, MdLaptop, MdManageSearch, MdPerson} from "react-icons/md";
 import {FiCpu} from "react-icons/fi";
 
 import Logo from "../../../public/images/logos/EZ-Laptop-logo.png";
 
 const BASE_API = "http://localhost:3080";
+
+function SearchBar({className, children}) {
+    return <div className={" " + className}>
+        {children}
+    </div>
+}
 
 function TabHeader({onClick, className, children, isDisabled}) {
     return <li onClick={onClick}
@@ -21,7 +27,59 @@ function TabHeader({onClick, className, children, isDisabled}) {
 
 function TabMain({children, className}) {
     return <main
-        className={"w-full p-2 md:p-4 rounded-tr-lg md:rounded-tl-lg rounded-b-lg bg-white shadow-md " + className}>{children}</main>
+        className={"w-full p-2 md:p-4 rounded-tr-lg md:rounded-tl-lg rounded-b-lg bg-white " + className}>{children}</main>
+}
+
+function AccountSection({className, children, roles, user_data,}) {
+    const [avatar, setAvatar] = useState(user_data?.Avatar);
+    const [roleID, setRoleID] = useState(user_data?.Role?._id);
+    const [user, setUser] = useState(user_data);
+
+    async function updatePermission(user_id, role_id) {
+        try {
+            await fetch(`${BASE_API}/account/info`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({
+                    UserID: user_id,
+                    Role: role_id
+                }),
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setRoleID(data.Role?._id);
+                    setUser(data);
+                });
+        } catch (err) {
+            console.error(`Can't update permission! Error: ${err}`);
+        }
+    }
+
+    return <section className={"outline-1 rounded-lg p-2 flex items-center gap-2 " + className}>
+        <div className="relative w-[48px] h-[48px]">
+            <Image
+                src={BASE_API + avatar}
+                alt={user?.Username + "'s avatar"}
+                fill={true}
+                sizes="(max-width: 768px) 48px, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover rounded-full"
+            />
+        </div>
+        <div className="max-w-[100px] md:min-w-1/2">
+            <h3 className="font-bold">{user?.Username}</h3>
+            <p className="underline overflow-hidden text-ellipsis">{user?.Email}</p>
+        </div>
+        <select onChange={e => {
+            updatePermission(user_data?._id, e.currentTarget.value)
+        }} key={roleID} name='Role' id='Role' className="outline-1 rounded-lg md:ml-4 p-1" defaultValue={roleID}>
+            {roles.map((role, index) => <option key={index} value={role?._id}
+                                                name={role?.Name}>{role?.Name === 'Admin' && "Quản trị viên" || role?.Name === 'User' && "Người dùng"}</option>)}
+        </select>
+        {children}
+    </section>
 }
 
 function AdminPage() {
@@ -33,6 +91,10 @@ function AdminPage() {
     const [isLogout, setIsLogout] = useState(false);
     const [tab, setTab] = useState('AccountTab');
     const [user, setUser] = useState({});
+    // state of account tab
+    const [roles, setRoles] = useState([]);
+    const [searchedUsers, setSearchedUsers] = useState([]);
+    const [users, setUsers] = useState([]);
 
     async function getUserData(signal) {
         try {
@@ -54,10 +116,62 @@ function AdminPage() {
         }
     }
 
+    async function getAllUsers(signal) {
+        try {
+            await fetch(`${BASE_API}/account`, {
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setUsers(data);
+                    setSearchedUsers(data);
+                })
+        } catch (err) {
+            console.error(`Can't get all users! Error: ${err.message}`);
+        }
+    }
+
+    async function deleteUser(user_id) {
+        try {
+            await fetch(`${BASE_API}/account`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({
+                    UserID: user_id,
+                }),
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setUsers(users.filter(user => user?._id !== data?._id));
+                    setSearchedUsers(searchedUsers.filter(user => user?._id !== data?._id));
+                    alert("Xóa tài khoản thành công!");
+                });
+        } catch (err) {
+            console.error(`Can't delete user! Error: ${err}`);
+        }
+    }
+
+    async function getAllRoles(signal) {
+        try {
+            await fetch(`${BASE_API}/role`, {
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => setRoles(data));
+        } catch (err) {
+            console.error(`Can't get all roles! Error: ${err.message}`);
+        }
+    }
+
     useEffect(() => {
         const abortController = new AbortController();
         const signal = abortController.signal;
         getUserData(signal);
+        getAllUsers(signal);
+        getAllRoles(signal);
         return () => abortController.abort();
     }, []);
 
@@ -161,11 +275,37 @@ function AdminPage() {
                            isDisabled={tab === 'OrderTab'}><MdAssignmentTurnedIn
                     className='text-lg md:text-xl'/><h2 className="hidden md:inline">Đơn hàng</h2></TabHeader>
             </ul>
-            {tab === 'AccountTab' && <TabMain className="h-[500px]">Quản lý tài khoản</TabMain>}
-            {tab === 'CPU_Tab' && <TabMain className="h-[500px]">Quản lý CPU</TabMain>}
-            {tab === 'GPU_Tab' && <TabMain className="h-[500px]">Quản lý GPU</TabMain>}
-            {tab === 'LaptopTab' && <TabMain className="h-[500px]">Quản lý Laptop</TabMain>}
-            {tab === 'OrderTab' && <TabMain className="h-[500px]">Quản lý đơn hàng</TabMain>}
+            {tab === 'AccountTab' && <TabMain className="flex flex-col gap-4">
+                {/*search bar for accounts*/}
+                <SearchBar className="flex flex-col gap-4">
+                    <div className="flex items-center gap-2">
+                        <label htmlFor='Username' className='text-4xl'><MdManageSearch/></label>
+                        <input onChange={e => {
+                            if (e.currentTarget.value !== '') {
+                                setSearchedUsers(users.filter(user => user.Username.toLowerCase().includes(e.currentTarget.value.toLowerCase())))
+                            } else {
+                                setSearchedUsers(users);
+                            }
+                        }} type='search' id='Username' className="w-full lg:w-1/2 outline-1 border-none rounded-lg p-2"
+                               placeholder="Tìm kiếm tên tài khoản?"/>
+                    </div>
+                </SearchBar>
+                {/*Accounts list*/}
+                <div className="flex flex-col gap-2 md:gap-4">
+                    {searchedUsers.map((user, index) => <AccountSection key={index} roles={roles}
+                                                                        user_data={user}>
+                        <button onClick={() => {
+                            deleteUser(user?._id)
+                        }}
+                                className="outline-1 rounded-lg p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-red-500 active:bg-[#ccc]">
+                            <MdDelete/></button>
+                    </AccountSection>)}
+                </div>
+            </TabMain>}
+            {tab === 'CPU_Tab' && <TabMain>Quản lý CPU</TabMain>}
+            {tab === 'GPU_Tab' && <TabMain>Quản lý GPU</TabMain>}
+            {tab === 'LaptopTab' && <TabMain>Quản lý Laptop</TabMain>}
+            {tab === 'OrderTab' && <TabMain>Quản lý đơn hàng</TabMain>}
         </div>
     </div>
 }
