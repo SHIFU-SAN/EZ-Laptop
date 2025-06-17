@@ -9,6 +9,7 @@ const Host = process.env.HOST;
 
 const DateServices = require("./services/DateServices");
 const account_routes = require("./routes/AccountRoutes");
+const laptop_routes = require("./routes/LaptopRoutes");
 const role_routes = require("./routes/RoleRoutes");
 
 async function connectToDB() {
@@ -31,6 +32,7 @@ app
     .use(express.json())
     .use('/public/images', express.static('public/images'))
     .use('/account', account_routes)
+    .use('/laptop', laptop_routes)
     .use('/role', role_routes)
     .use('/*splat', (req, res) => res.status(404).send({message: "API not found!"}))
     .listen(Port, Host, () => console.log(`${DateServices.getTimeCurrent()} Server is running at: http://${Host}:${Port}`));
