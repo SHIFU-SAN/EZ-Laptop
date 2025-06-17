@@ -25,7 +25,6 @@ class TokenController {
     }
 
     static async clearToken(req, res) {
-        console.log("Clearing token");
         return res.status(200).cookie('token', null, {httpOnly: true}).json({message:'Token cleared!'});
     }
 }

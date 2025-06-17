@@ -88,7 +88,7 @@ function ProfilePage() {
             const NewUsername = formData.get('Username');
             const NewPassword = formData.get('Password');
             if (NewEmail || NewUsername || NewPassword) {
-                await fetch(`${BASE_API}/account/info`, {
+                await fetch(`${BASE_API}/account/own-info`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': "application/json"
@@ -103,7 +103,7 @@ function ProfilePage() {
             }
             if (newAvatarRef.current?.files[0]) {
                 formData.append('Avatar', newAvatarRef.current.files[0]);
-                await fetch(`${BASE_API}/account/avatar`, {
+                await fetch(`${BASE_API}/account/own-avatar`, {
                     method: 'PUT',
                     credentials: 'include',
                     body: formData

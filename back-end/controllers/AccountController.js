@@ -91,6 +91,19 @@ class AccountController {
 
     static async setInfo(req, res) {
         try {
+            const AccountSet = await AccountServices.updateAccount(req.body?.UserID, req.body);
+            return res.status(200).json(AccountSet);
+        } catch (err) {
+            console.log(`${DateServices.getTimeCurrent()} Can't set info! Error: ${err.message}`);
+            return res.status(400).send({
+                message: "Can't set info!",
+                error: err.message
+            });
+        }
+    }
+
+    static async setOwnInfo(req, res) {
+        try {
             const AccountSet = await AccountServices.updateAccount(req.user_id, req.body);
             return res.status(200).json(AccountSet);
         } catch (err) {
@@ -102,7 +115,7 @@ class AccountController {
         }
     }
 
-    static async setAvatar(req, res) {
+    static async setOwnAvatar(req, res) {
         try {
             const AccountSet = await AccountServices.updateAccount(req.user_id, {Avatar: req?.file?.path});
             return res.status(200).json(AccountSet);

@@ -17,16 +17,16 @@ router
         AccountController.checkPermission,
         AccountController.getAccountById)
     .get('/logout', TokenController.clearToken)
-    .put('/info',
+    .put('/own-info',
         TokenController.checkToken,
         (req, res, next) => {
             req.permissions = ['set: own info'];
             return next();
         },
         AccountController.checkPermission,
-        AccountController.setInfo
+        AccountController.setOwnInfo
     )
-    .put('/avatar',
+    .put('/own-avatar',
         TokenController.checkToken,
         (req, res, next) => {
             req.permissions = ['set: own avatar'];
@@ -34,7 +34,7 @@ router
         },
         AccountController.checkPermission,
         UploadController.uploadAvatar.single('Avatar'),
-        AccountController.setAvatar,
+        AccountController.setOwnAvatar,
     )
 
 module.exports = router;
