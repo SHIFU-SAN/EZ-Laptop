@@ -7,8 +7,9 @@ require('dotenv').config();
 const Port = process.env.PORT;
 const Host = process.env.HOST;
 
-const account_routes = require("./routes/AccountRoutes");
 const DateServices = require("./services/DateServices");
+const account_routes = require("./routes/AccountRoutes");
+const role_routes = require("./routes/RoleRoutes");
 
 async function connectToDB() {
     try {
@@ -30,5 +31,6 @@ app
     .use(express.json())
     .use('/public/images', express.static('public/images'))
     .use('/account', account_routes)
+    .use('/roles', role_routes)
     .use('/*splat', (req, res) => res.status(404).send({message: "API not found!"}))
     .listen(Port, Host, () => console.log(`${DateServices.getTimeCurrent()} Server is running at: http://${Host}:${Port}`));

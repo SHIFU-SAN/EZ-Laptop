@@ -23,6 +23,11 @@ class AccountServices {
         return AccountFound;
     }
 
+    static async findAllAccounts() {
+        const AccountsFound = await Account.find().populate('Role').exec();
+        return AccountsFound;
+    }
+
     static async findAccountByEmail(email) {
         const AccountFound = await Account.findOne({Email: email}).exec();
         return AccountFound;
@@ -58,6 +63,11 @@ class AccountServices {
         await AccountFound.save();
         AccountFound = await Account.findById(AccountFound._id).populate('Role').exec();
         return AccountFound;
+    }
+
+    static async deleteAccount(id) {
+        const AccountDeleted = await Account.findByIdAndDelete(id);
+        return AccountDeleted;
     }
 }
 

@@ -63,12 +63,25 @@ class AccountController {
         }
     }
 
+    static async getAllAccounts(req, res) {
+        try {
+            const AccountsFound = await AccountServices.findAllAccounts();
+            return res.status(200).json(AccountsFound);
+        } catch (err) {
+            console.log(`${DateServices.getTimeCurrent()} Can't get all accounts! Error: ${err.message}`);
+            return res.status(400).send({
+                message: "Can't get all accounts!",
+                error: err.message
+            });
+        }
+    }
+
     static async getAccountById(req, res) {
         try {
             const AccountFound = await AccountServices.findAccountByID(req.user_id);
             return res.status(200).json(AccountFound);
         } catch (err) {
-            console.log(`${DateServices.getTimeCurrent()} Can't get account by ID! ${err.message}`);
+            console.log(`${DateServices.getTimeCurrent()} Can't get account by ID! Error: ${err.message}`);
             return res.status(400).send({
                 message: "Can't get account by ID!",
                 error: err.message
@@ -107,7 +120,7 @@ class AccountController {
             const AccountSet = await AccountServices.updateAccount(req.user_id, req.body);
             return res.status(200).json(AccountSet);
         } catch (err) {
-            console.log(`${DateServices.getTimeCurrent()} Can't set account info! Error: ${err.message}`);
+            console.log(`${DateServices.getTimeCurrent()} Can't set own info! Error: ${err.message}`);
             return res.status(400).send({
                 message: "Can't set account info!",
                 error: err.message
@@ -120,11 +133,24 @@ class AccountController {
             const AccountSet = await AccountServices.updateAccount(req.user_id, {Avatar: req?.file?.path});
             return res.status(200).json(AccountSet);
         } catch (err) {
-            console.log(`${DateServices.getTimeCurrent()} Can't set avatar! Error: ${err.message}`);
+            console.log(`${DateServices.getTimeCurrent()} Can't set own avatar! Error: ${err.message}`);
             return res.status(400).send({
                 message: "Can't set avatar!",
                 error: err.message
             })
+        }
+    }
+
+    static async removeAccount(req, res) {
+        try {
+            const AccountRemoved = await AccountServices.deleteAccount(req.body?.UserID);
+            return res.status(200).json(AccountRemoved);
+        } catch (err) {
+            console.log(`${DateServices.getTimeCurrent()} Can't remove account! Error: ${err.message}`);
+            return res.status(400).send({
+                message: "Can't remove account!",
+                error: err.message
+            });
         }
     }
 }
