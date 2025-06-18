@@ -16,7 +16,7 @@ router
         AccountController.checkPermission,
         LaptopController.addLaptop)
     .get('/list', LaptopController.getAllLaptops)
-    .get('/:id', LaptopController.getLaptopByID)
+    .get('/:laptop_id', LaptopController.getLaptopByID)
     .put('/info',
         TokenController.checkToken,
         (req, res, next) => {
