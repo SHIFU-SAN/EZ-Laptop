@@ -11,6 +11,7 @@ import {
     MdAssignmentTurnedIn,
     MdCreate,
     MdDelete,
+    MdUploadFile,
     MdLogout,
     MdLaptop,
     MdManageSearch,
@@ -108,14 +109,15 @@ function LaptopSection({className, children, laptop_data}) {
 
 function CreationPart({className, children}) {
     const [isAdding, setIsAdding] = useState(false);
-    return <div className={"flex flex-col gap-2 " + className}>
+    return <div className={"p-2 flex flex-col gap-2 " + className}>
         <button onClick={() => setIsAdding(!isAdding)}
                 className="w-max outline-1 rounded-lg px-4 py-2 bg-[#FFB433] flex items-center gap-1 cursor-pointer hover:bg-[#80CBC4] hover:text-whtie active:bg-[#B4EBE6] active:text-white">
             <MdAddCircle className='text-2xl'/>Thêm
         </button>
-        {isAdding && <div className="outline-1 rounded-lg p-2">
-            {children}
-        </div>}
+        {isAdding &&
+            <div className="outline-1 rounded-lg lg:w-1/2 h-[420px] md:h-[760px] lg:h-[652px] overflow-y-auto p-2">
+                {children}
+            </div>}
     </div>
 }
 
@@ -123,6 +125,7 @@ function AdminPage() {
     const router = useRouter();
 
     const navRef = useRef(null);
+    const laptopImageRef = useRef(null);
 
     const [avatar, setAvatar] = useState(`${BASE_API}/public/images/avatars/EmptyAvatar.png`);
     const [isLogout, setIsLogout] = useState(false);
@@ -135,6 +138,94 @@ function AdminPage() {
     // state of laptop tab
     const [laptops, setLaptops] = useState([]);
     const [searchedLaptops, setSearchedLaptops] = useState([]);
+    const [laptopImageName, setLaptopImageName] = useState('');
+
+    async function createLaptop(formData) {
+        try {
+            let LaptopID = null;
+            await fetch(`${BASE_API}/laptop`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({
+                    Name: formData.get('Name'),
+                    CPU: formData.get('CPU'),
+                    GPU: formData.get('GPU'),
+                    RAM: formData.get('RAM'),
+                    SSD: formData.get('SSD'),
+                    Screen: formData.get('Screen'),
+                    Price: formData.get('Price')
+                }),
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setLaptops([...laptops, data]);
+                    setSearchedLaptops([...searchedLaptops, data]);
+                    LaptopID = data._id;
+                });
+
+            formData.append('LaptopID', LaptopID);
+            formData.append('LaptopImage', laptopImageRef.current?.files[0]);
+            await fetch(`${BASE_API}/laptop/image`, {
+                method: 'PUT',
+                body: formData,
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setLaptops(laptops.map(laptop => {
+                        if (laptop._id === data._id) {
+                            laptop.Image = data.Image;
+                        }
+                        return laptop;
+                    }));
+                    setLaptopImageName('');
+                    alert("Đã thêm laptop. ^-^");
+                })
+        } catch (err) {
+            console.error(`Can't create laptop! Error: ${err}`);
+        }
+    }
+
+    async function getAllLaptops(signal) {
+        try {
+            await fetch(`${BASE_API}/laptop/list`, {
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setLaptops(data);
+                    setSearchedLaptops(data);
+                });
+        } catch (err) {
+            console.error(`Can't get all laptops! Error: ${err.message}`);
+        }
+    }
+
+    async function deleteLaptop(id) {
+        try {
+            await fetch(`${BASE_API}/laptop`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({
+                    LaptopID: id
+                }),
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setLaptops(laptops.filter(laptop => laptop._id !== data._id));
+                    setSearchedLaptops(searchedLaptops.filter(laptop => laptop._id !== data._id));
+                    alert("Đã xóa laptop!");
+                });
+        } catch (err) {
+            console.error(`Can't delete laptop! Error: ${err}`);
+        }
+    }
 
     async function getUserData(signal) {
         try {
@@ -209,6 +300,7 @@ function AdminPage() {
     useEffect(() => {
         const abortController = new AbortController();
         const signal = abortController.signal;
+        getAllLaptops(signal);
         getUserData(signal);
         getAllUsers(signal);
         getAllRoles(signal);
@@ -358,13 +450,67 @@ function AdminPage() {
                                placeholder="Tìm kiếm laptop theo tên?"/>
                     </div>
                 </SearchBar>
-                <CreationPart></CreationPart>
-                {searchedLaptops.map((laptop, index)=><LaptopSection key={index} laptop_data={laptop}>
+                <CreationPart>
+                    <form action={createLaptop} className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor='Name'>Tên máy<span className='text-red-500'>*</span>:</label>
+                            <input type='text' id='Name' name='Name' className="outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập tên máy ở đây..." required={true}/>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor='CPU'>Vi xử lý<span className='text-red-500'>*</span>:</label>
+                            <input type='text' id='CPU' name='CPU' className="outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập thông tin vi xử lý ở đây..." required={true}/>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor='GPU'>GPU<span className='text-red-500'>*</span>:</label>
+                            <input type='text' id='GPU' name='GPU' className="outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập thông tin card đồ họa ở đây..." required={true}/>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor='RAM'>RAM<span className='text-red-500'>*</span>:</label>
+                            <input type='number' id='RAM' name='RAM' className="outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập dung lượng RAM ở đây..." required={true}/>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor='SSD'>SSD<span className='text-red-500'>*</span>:</label>
+                            <input type='number' id='SSD' name='SSD' className="outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập dung lượng SSD ở đây..." required={true}/>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor='Screen'>Màn hình<span className='text-red-500'>*</span>:</label>
+                            <input type='text' id='Screen' name='Screen'
+                                   className="outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập thông tin màn hình ở đây..." required={true}/>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor='Price'>Giá<span className='text-red-500'>*</span>:</label>
+                            <input type='number' id='Price' name='Price'
+                                   className="outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập giá ở đây..." required={true}/>
+                        </div>
+                        <button type='submit'
+                                className="w-max outline-1 rounded-lg px-8 py-2 bg-[#FFB433] cursor-pointer hover:bg-[#80CBC4] hover:text-white active:bg-[#ccc]">Lưu
+                        </button>
+                    </form>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor='LaptopImage'
+                               className="outline-1 rounded-lg w-max mt-4 p-2 bg-[#FFB433] flex items-center gap-1 cursor-pointer hover:bg-[#80CBC4] hover:text-white active:bg-[#ccc]">Chọn
+                            ảnh laptop<MdUploadFile/></label>
+                        <input onChange={e => setLaptopImageName(e.currentTarget?.files[0]?.name)} type='file'
+                               id='LaptopImage' name='LaptopImage' ref={laptopImageRef} hidden={true}
+                               required/>
+                        {laptopImageName !== '' && <p>{laptopImageName}</p>}
+                    </div>
+                </CreationPart>
+                {searchedLaptops.map((laptop, index) => <LaptopSection key={index} laptop_data={laptop}>
                     <button
-                            className="outline-1 rounded-lg p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-red-500 active:bg-[#ccc]">
+                        onClick={() => {
+                            deleteLaptop(laptop._id);
+                        }}
+                        className="outline-1 rounded-lg p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-red-500 active:bg-[#ccc]">
                         <MdDelete/></button>
                 </LaptopSection>)}
-                <div className="h-[660px] overflow-y-auto"></div>
             </TabMain>}
             {tab === 'OrderTab' && <TabMain>Quản lý đơn hàng</TabMain>}
         </div>

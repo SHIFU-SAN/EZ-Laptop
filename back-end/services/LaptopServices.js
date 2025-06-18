@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const Laptop = require("../models/Laptop");
 
 class LaptopServices {
@@ -47,7 +49,12 @@ class LaptopServices {
             FoundLaptop.Screen = new_info?.Screen;
         }
         if (new_info?.Image && new_info?.Image !== FoundLaptop?.Image) {
-            FoundLaptop.Image = '/' + new_info?.Image.replace(/\\/g, '/');
+            if (FoundLaptop.Image !== '') {
+                fs.unlinkSync(FoundLaptop.Image);
+                FoundLaptop.Image = '/' + new_info?.Image.replace(/\\/g, '/');
+            } else {
+                FoundLaptop.Image = '/' + new_info?.Image.replace(/\\/g, '/');
+            }
         }
         if (new_info?.Price && new_info?.Price !== FoundLaptop?.Price) {
             FoundLaptop.Price = new_info?.Price;
@@ -57,7 +64,8 @@ class LaptopServices {
     }
 
     static async deleteLaptop(id) {
-        let deletedLaptop = await Laptop.findByIdAndDelete(id);
+        const deletedLaptop = await Laptop.findByIdAndDelete(id);
+        fs.unlinkSync(deletedLaptop.Image);
         return deletedLaptop;
     }
 }

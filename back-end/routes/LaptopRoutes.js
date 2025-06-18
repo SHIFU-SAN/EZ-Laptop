@@ -25,7 +25,7 @@ router
         },
         AccountController.checkPermission,
         LaptopController.setLaptop)
-    .put('/avatar',
+    .put('/image',
         TokenController.checkToken,
         (req, res, next) => {
             req.permissions = ["set: laptop"];
