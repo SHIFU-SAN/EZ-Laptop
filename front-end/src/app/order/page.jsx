@@ -53,7 +53,23 @@ function OrderPage() {
 
     async function order(formData) {
         try {
-            console.log("order");
+            await fetch(`${BASE_API}/order`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({
+                    Laptop: searchParams.get('laptop_id'),
+                    Receiver: formData.get('Receiver'),
+                    Phone: formData.get('Phone'),
+                    Address: formData.get('Address')
+                }),
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                });
         } catch (err) {
             console.log(`Can't order laptop! Error: ${err.message}`);
         }
@@ -67,6 +83,7 @@ function OrderPage() {
                         src={image}
                         alt="laptop image"
                         fill={true}
+                        priority={true}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="object-cover rounded-full"
                     />
@@ -83,17 +100,23 @@ function OrderPage() {
             <form action={order} className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                     <label htmlFor='Phone'>Số điện thoại<span className='text-red-500'>*</span>:</label>
-                    <input type='tel' id='Phone' name='Phone' className="outline-1 border-none rounded-lg p-2" placeholder="Nhập số điện thoại ở đây..." required/>
+                    <input type='tel' id='Phone' name='Phone' className="outline-1 border-none rounded-lg p-2"
+                           placeholder="Nhập số điện thoại ở đây..." required/>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <label htmlFor='Name'>Người nhận<span className='text-red-500'>*</span>:</label>
-                    <input type='text' id='Name' name='Name' className="outline-1 border-none rounded-lg p-2" placeholder="Nhập họ tên ở đây..." required/>
+                    <label htmlFor='Receiver'>Người nhận<span className='text-red-500'>*</span>:</label>
+                    <input type='text' id='Receiver' name='Receiver' className="outline-1 border-none rounded-lg p-2"
+                           placeholder="Nhập họ tên ở đây..." required/>
                 </div>
                 <div className="flex flex-col gap-2">
                     <label htmlFor='Address'>Địa chỉ<span className='text-red-500'>*</span>:</label>
-                    <input type='text' id='Address' name='Address' className="outline-1 border-none rounded-lg p-2" placeholder="Nhập địa chỉ ở đây..." required/>
+                    <input type='text' id='Address' name='Address' className="outline-1 border-none rounded-lg p-2"
+                           placeholder="Nhập địa chỉ ở đây..." required/>
                 </div>
-                <button type='submit' className="w-max outline-1 rounded-lg px-8 py-2 bg-[#FFB433] self-center cursor-pointer hover:bg-[#80CBC4] hover:text-white active:bg-[#ccc]">Đặt hàng</button>
+                <button type='submit'
+                        className="w-max outline-1 rounded-lg px-8 py-2 bg-[#FFB433] self-center cursor-pointer hover:bg-[#80CBC4] hover:text-white active:bg-[#ccc]">Đặt
+                    hàng
+                </button>
             </form>
         </div>
     </div>
