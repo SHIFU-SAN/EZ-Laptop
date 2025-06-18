@@ -4,6 +4,7 @@ const router = express.Router();
 const AccountController = require('../controllers/AccountController');
 const LaptopController = require('../controllers/LaptopController');
 const TokenController = require('../controllers/TokenController');
+const UploadController = require('../controllers/UploadController');
 
 router
     .post('/',
@@ -14,15 +15,9 @@ router
         },
         AccountController.checkPermission,
         LaptopController.addLaptop)
-    .get('/list',
-        TokenController.checkToken,
-        (req, res, next) => {
-            req.permissions = ["get: all laptops"];
-            return next();
-        },
-        AccountController.checkPermission,
-        LaptopController.getAllLaptops)
-    .put('/',
+    .get('/list', LaptopController.getAllLaptops)
+    .get('/:id', LaptopController.getLaptopByID)
+    .put('/info',
         TokenController.checkToken,
         (req, res, next) => {
             req.permissions = ["set: laptop"];
@@ -30,6 +25,15 @@ router
         },
         AccountController.checkPermission,
         LaptopController.setLaptop)
+    .put('/avatar',
+        TokenController.checkToken,
+        (req, res, next) => {
+            req.permissions = ["set: laptop"];
+            return next();
+        },
+        AccountController.checkPermission,
+        UploadController.uploadLaptop.single('LaptopImage'),
+        LaptopController.setImage)
     .delete('/',
         TokenController.checkToken,
         (req, res, next) => {

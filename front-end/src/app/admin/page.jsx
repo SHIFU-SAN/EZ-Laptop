@@ -6,7 +6,16 @@ import Image from "next/image";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {BsGpuCard} from "react-icons/bs";
-import {MdAssignmentTurnedIn, MdDelete, MdLogout, MdLaptop, MdManageSearch, MdPerson} from "react-icons/md";
+import {
+    MdAddCircle,
+    MdAssignmentTurnedIn,
+    MdCreate,
+    MdDelete,
+    MdLogout,
+    MdLaptop,
+    MdManageSearch,
+    MdPerson
+} from "react-icons/md";
 import {FiCpu} from "react-icons/fi";
 
 import Logo from "../../../public/images/logos/EZ-Laptop-logo.png";
@@ -30,7 +39,7 @@ function TabMain({children, className}) {
         className={"w-full p-2 md:p-4 rounded-tr-lg md:rounded-tl-lg rounded-b-lg bg-white " + className}>{children}</main>
 }
 
-function AccountSection({className, children, roles, user_data,}) {
+function AccountSection({className, children, roles, user_data}) {
     const [avatar, setAvatar] = useState(user_data?.Avatar);
     const [roleID, setRoleID] = useState(user_data?.Role?._id);
     const [user, setUser] = useState(user_data);
@@ -82,6 +91,34 @@ function AccountSection({className, children, roles, user_data,}) {
     </section>
 }
 
+function LaptopSection({className, children, laptop_data}) {
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [laptop, setLaptop] = useState(laptop_data);
+
+    return <section className={"outline-1 rounded-lg p-2 flex items-center gap-2 " + className}>
+        <div className="flex items-center gap-2">
+            <h2>{laptop?.Name}</h2>
+            <button
+                className="outline-1 rounded-lg p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-[#80CBC4] hover:text-whtie active:bg-[#B4EBE6] active:text-white">
+                <MdCreate/></button>
+            {children}
+        </div>
+    </section>
+}
+
+function CreationPart({className, children}) {
+    const [isAdding, setIsAdding] = useState(false);
+    return <div className={"flex flex-col gap-2 " + className}>
+        <button onClick={() => setIsAdding(!isAdding)}
+                className="w-max outline-1 rounded-lg px-4 py-2 bg-[#FFB433] flex items-center gap-1 cursor-pointer hover:bg-[#80CBC4] hover:text-whtie active:bg-[#B4EBE6] active:text-white">
+            <MdAddCircle className='text-2xl'/>Thêm
+        </button>
+        {isAdding && <div className="outline-1 rounded-lg p-2">
+            {children}
+        </div>}
+    </div>
+}
+
 function AdminPage() {
     const router = useRouter();
 
@@ -95,6 +132,9 @@ function AdminPage() {
     const [roles, setRoles] = useState([]);
     const [searchedUsers, setSearchedUsers] = useState([]);
     const [users, setUsers] = useState([]);
+    // state of laptop tab
+    const [laptops, setLaptops] = useState([]);
+    const [searchedLaptops, setSearchedLaptops] = useState([]);
 
     async function getUserData(signal) {
         try {
@@ -304,7 +344,28 @@ function AdminPage() {
             </TabMain>}
             {tab === 'CPU_Tab' && <TabMain>Quản lý CPU</TabMain>}
             {tab === 'GPU_Tab' && <TabMain>Quản lý GPU</TabMain>}
-            {tab === 'LaptopTab' && <TabMain>Quản lý Laptop</TabMain>}
+            {tab === 'LaptopTab' && <TabMain className="flex flex-col gap-4">
+                <SearchBar>
+                    <div className="flex items-center gap-2">
+                        <label htmlFor='Username' className='text-4xl'><MdManageSearch/></label>
+                        <input onChange={e => {
+                            if (e.currentTarget.value !== '') {
+                                setSearchedLaptops(laptops.filter(laptop => laptop?.Name.toLowerCase().includes(e.currentTarget.value.toLowerCase())));
+                            } else {
+                                setSearchedLaptops(laptops);
+                            }
+                        }} type='search' id='Username' className="w-full lg:w-1/2 outline-1 border-none rounded-lg p-2"
+                               placeholder="Tìm kiếm laptop theo tên?"/>
+                    </div>
+                </SearchBar>
+                <CreationPart></CreationPart>
+                {searchedLaptops.map((laptop, index)=><LaptopSection key={index} laptop_data={laptop}>
+                    <button
+                            className="outline-1 rounded-lg p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-red-500 active:bg-[#ccc]">
+                        <MdDelete/></button>
+                </LaptopSection>)}
+                <div className="h-[660px] overflow-y-auto"></div>
+            </TabMain>}
             {tab === 'OrderTab' && <TabMain>Quản lý đơn hàng</TabMain>}
         </div>
     </div>

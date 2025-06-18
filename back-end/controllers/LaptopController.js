@@ -24,6 +24,15 @@ class LaptopController {
         }
     }
 
+    static async getLaptopByID(req, res) {
+        try {
+            const FoundLaptop = await LaptopServices.findLaptopByID(req.params?.laptop_id);
+            return res.status(200).json(FoundLaptop);
+        } catch (err) {
+            console.log(`${DateServices.getTimeCurrent()} Can't get laptop by ID! Error: ${err.message}`);
+        }
+    }
+
     static async setLaptop(req, res) {
         try {
             const SetLaptop = await LaptopServices.updateLaptop(req.body?.LaptopID, req.body);
@@ -32,6 +41,19 @@ class LaptopController {
             console.log(`${DateServices.getTimeCurrent()} Can't set new laptop! Error: ${err.message}`);
             return res.status(400).send({
                 message: "Can't set new laptop!",
+                error: err.message
+            });
+        }
+    }
+
+    static async setImage(req, res) {
+        try {
+            const SetLaptop = await LaptopServices.updateLaptop(req.body?.LaptopID, {Image: req?.file?.path});
+            return SetLaptop;
+        } catch (err) {
+            console.log(`${DateServices.getTimeCurrent()} Can't set new image! Error: ${err.message}`);
+            return res.status(400).send({
+                message: "Can't set new image!",
                 error: err.message
             });
         }

@@ -21,6 +21,11 @@ class LaptopServices {
         return FoundLaptops;
     }
 
+    static async findLaptopByID(laptop_id) {
+        const FoundLaptop = await Laptop.findById(laptop_id);
+        return FoundLaptop;
+    }
+
     static async updateLaptop(id, new_info) {
         let FoundLaptop = await Laptop.findById(id);
         if (new_info?.Name && new_info?.Name !== FoundLaptop?.Name) {
@@ -41,8 +46,8 @@ class LaptopServices {
         if (new_info?.Screen && new_info?.Screen === FoundLaptop?.Screen) {
             FoundLaptop.Screen = new_info?.Screen;
         }
-        if (new_info?.Avatar && new_info?.Avatar !== FoundLaptop?.Avatar) {
-            FoundLaptop.Avatar = new_info?.Avatar;
+        if (new_info?.Image && new_info?.Image !== FoundLaptop?.Image) {
+            FoundLaptop.Image = '/' + new_info?.Image.replace(/\\/g, '/');
         }
         if (new_info?.Price && new_info?.Price !== FoundLaptop?.Price) {
             FoundLaptop.Price = new_info?.Price;

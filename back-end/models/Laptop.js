@@ -26,7 +26,7 @@ const LaptopSchema = new Schema({
         type: String,
         required: true
     },
-    Avatar: {
+    Image: {
         type: String,
         default: ''
     },
