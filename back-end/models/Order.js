@@ -23,6 +23,10 @@ const orderSchema = new Schema({
     Address: {
         type: String,
         required: true
+    },
+    Confirm: {
+        type: Boolean,
+        default: false
     }
 });
 
