@@ -11,11 +11,13 @@ import {
     MdAssignmentTurnedIn,
     MdCreate,
     MdDelete,
+    MdEdit,
     MdUploadFile,
     MdLogout,
     MdLaptop,
     MdManageSearch,
-    MdPerson
+    MdPerson,
+    MdVisibility
 } from "react-icons/md";
 import {FiCpu} from "react-icons/fi";
 
@@ -93,29 +95,183 @@ function AccountSection({className, children, roles, user_data}) {
 }
 
 function LaptopSection({className, children, laptop_data}) {
-    const [isUpdating, setIsUpdating] = useState(false);
-    const [laptop, setLaptop] = useState(laptop_data);
+    const imageRef = useRef(null);
 
-    return <section className={"outline-1 rounded-lg p-2 flex items-center gap-2 " + className}>
+    const [isEditing, setIsEditing] = useState(false);
+    const [image, setImage] = useState(laptop_data?.Image ? BASE_API + laptop_data?.Image : BASE_API + "/public/images/NoImageAvailable.png");
+    const [imageName, setImageName] = useState('');
+    const [laptop, setLaptop] = useState(laptop_data);
+    const [isReading, setIsReading] = useState(false);
+
+    async function updateLaptop(formData) {
+        try {
+            // update infos
+            const NewName = formData.get('Name');
+            const NewCPU = formData.get('CPU');
+            const NewGPU = formData.get('GPU');
+            const NewRAM = formData.get('RAM');
+            const NewSSD = formData.get('SSD');
+            const NewScreen = formData.get('Screen');
+            const NewPrice = formData.get('Price');
+
+            formData.append('LaptopID', laptop_data?._id);
+            if (NewName || NewCPU || NewGPU || NewRAM || NewSSD || NewScreen || NewScreen) {
+                await fetch(`${BASE_API}/laptop/info`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': "application/json"
+                    },
+                    body: JSON.stringify({
+                        LaptopID: formData.get('LaptopID'),
+                        Name: NewName,
+                        CPU: NewCPU,
+                        GPU: NewGPU,
+                        RAM: NewRAM,
+                        SSD: NewSSD,
+                        Screen: NewScreen,
+                        Price: NewPrice
+                    }),
+                    credentials: 'include'
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                        setLaptop(data);
+                    });
+            }
+
+            // update image
+            if (imageRef.current?.files[0]) {
+                formData.append('LaptopImage', imageRef.current.files[0]);
+                await fetch(`${BASE_API}/laptop/image`, {
+                    method: 'PUT',
+                    body: formData,
+                    credentials: 'include'
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        setImage(BASE_API + data?.Image);
+                        setImageName('');
+                    });
+            }
+            // close window
+            setIsEditing(!isEditing);
+            alert("Cập nhật thành công. ^-^");
+        } catch (err) {
+            console.error(`Can't update laptop! Error: ${err.message}`);
+        }
+    }
+
+    return <section className={"outline-1 rounded-lg p-2 md:p-4 flex flex-col gap-4 " + className}>
+        {/*overview*/}
         <div className="flex items-center gap-2">
-            <h2>{laptop?.Name}</h2>
+            <div className="relative min-w-[48px] md:min-w-[60px] size-[48px] md:size-[60px]">
+                <Image
+                    src={image}
+                    alt="Laptop image"
+                    fill={true}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover rounded-full"
+                />
+            </div>
+            <h2 className='w-full font-medium'>{laptop?.Name}</h2>
             <button
+                onClick={() => setIsReading(!isReading)}
+                className="outline-1 rounded-lg md:ml-4 p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-[#80CBC4] hover:text-whtie active:bg-[#B4EBE6] active:text-white">
+                <MdVisibility/></button>
+            <button
+                onClick={() => setIsEditing(!isEditing)}
                 className="outline-1 rounded-lg p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-[#80CBC4] hover:text-whtie active:bg-[#B4EBE6] active:text-white">
                 <MdCreate/></button>
             {children}
         </div>
+        {
+            /*reading*/
+            isReading && <ul>
+                <li className="flex gap-2"><h4 className='font-medium'>CPU:</h4><p>{laptop?.CPU}</p></li>
+                <li className="flex gap-2"><h4 className='font-medium'>GPU:</h4><p>{laptop?.GPU}</p></li>
+                <li className="flex items-center gap-2"><h4 className='font-medium'>RAM:</h4><p>{laptop?.RAM}GB</p></li>
+                <li className="flex items-center gap-2"><h4 className='font-medium'>SSD:</h4>
+                    <p>{laptop?.SSD > 1000 ? laptop?.SSD / 1000 + 'TB' : laptop?.SSD + 'GB'}</p></li>
+                <li className="flex gap-2"><h4 className='font-medium'>Màn hình:</h4><p>{laptop?.Screen}</p>
+                </li>
+                <li className="flex items-center gap-2"><h4 className='font-medium'>Giá:</h4><p
+                    className="font-bold text-[#80CBC4]">{new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(laptop?.Price)}</p></li>
+            </ul>
+        }
+        {
+            /*editing*/
+            isEditing && <div className="flex flex-col gap-4">
+                {/*update image*/}
+                <div className="flex flex-col gap-2">
+                    <label htmlFor='LaptopImage'
+                           className="w-max outline-1 rounded-lg bg-[#FFB433] p-2 flex items-center gap-1 cursor-pointer hover:bg-[#80CBC4] hover:text-white active:bg-[#ccc]">Chọn
+                        ảnh mới<MdUploadFile/></label>
+                    <input onChange={e => setImageName(e.currentTarget?.files[0]?.name)} type='file' id='LaptopImage'
+                           name='LaptopImage' ref={imageRef} hidden/>
+                    {imageName !== '' && <p className='underline'>{imageName}</p>}
+                </div>
+                {/*update info*/}
+                <form action={updateLaptop} className="outline-1 rounded-lg p-2 pb-8 flex flex-col gap-4">
+                    <div className="flex flex-col md:flex-row md:items-center gap-2">
+                        <label htmlFor='Name' className="md:min-w-[100px] flex items-center gap-1">Tên mới:<MdEdit/></label>
+                        <input type='text' id='Name' name='Name' className="w-full outline-1 border-none rounded-lg p-2"
+                               placeholder="Nhập tên mới ở đây..."/>
+                    </div>
+                    <div className="flex flex-col md:flex-row md:items-center gap-2">
+                        <label htmlFor='CPU' className="md:min-w-[100px] flex items-center gap-1">CPU mới:<MdEdit/></label>
+                        <input type='text' id='CPU' name='CPU' className="w-full outline-1 border-none rounded-lg p-2"
+                               placeholder="Nhập thông tin CPU mới ở đây..."/>
+                    </div>
+                    <div className="flex flex-col md:flex-row md:items-center gap-2">
+                        <label htmlFor='GPU' className="md:min-w-[100px] flex items-center gap-1">GPU mới:<MdEdit/></label>
+                        <input type='text' id='GPU' name='GPU' className="w-full outline-1 border-none rounded-lg p-2"
+                               placeholder="Nhập thông tin GPU mới ở đây..."/>
+                    </div>
+                    <div className="flex flex-col md:flex-row md:items-center gap-2">
+                        <label htmlFor='RAM' className="md:min-w-[244px] flex items-center gap-1">Dung lượng RAM
+                            mới (GB):<MdEdit/></label>
+                        <input type='number' id='RAM' name='RAM' className="w-full outline-1 border-none rounded-lg p-2"
+                               placeholder="Nhập dung lượng RAM mới ở đây..."/>
+                    </div>
+                    <div className="flex flex-col md:flex-row md:items-center gap-2">
+                        <label htmlFor='SSD' className="md:min-w-[244px] flex items-center gap-1">Dung lượng SSD
+                            mới (GB):<MdEdit/></label>
+                        <input type='number' id='SSD' name='SSD' className="w-full outline-1 border-none rounded-lg p-2"
+                               placeholder="Nhập dung lượng SSD mới ở đây..."/>
+                    </div>
+                    <div className="flex flex-col md:flex-row md:items-center gap-2">
+                        <label htmlFor='Screen' className="md:min-w-[144px] flex items-center gap-1">Màn hình mới:<MdEdit/></label>
+                        <input type='text' id='Screen' name='Screen' className="w-full outline-1 border-none rounded-lg p-2"
+                               placeholder="Nhập thông tin màn hình mới ở đây..."/>
+                    </div>
+                    <div className="flex flex-col md:flex-row md:items-center gap-2">
+                        <label htmlFor='Price' className="md:min-w-[100px] flex items-center gap-1">Giá
+                            mới:<MdEdit/></label>
+                        <input type='number' id='Price' name='Price' className="w-full outline-1 border-none rounded-lg p-2"
+                               placeholder="Nhập giá mới ở đây..."/>
+                    </div>
+                    <button type='submit'
+                            className="w-max outline-1 rounded-lg bg-[#FFB433] px-8 py-2 self-center hover:bg-[#80CBC4] hover:text-[#FBF8EF] active:bg-[#ccc]">Lưu
+                    </button>
+                </form>
+            </div>
+        }
     </section>
 }
 
 function CreationPart({className, children}) {
     const [isAdding, setIsAdding] = useState(false);
-    return <div className={"p-2 flex flex-col gap-2 " + className}>
+    return <div className={"flex flex-col gap-2 " + className}>
         <button onClick={() => setIsAdding(!isAdding)}
                 className="w-max outline-1 rounded-lg px-4 py-2 bg-[#FFB433] flex items-center gap-1 cursor-pointer hover:bg-[#80CBC4] hover:text-whtie active:bg-[#B4EBE6] active:text-white">
             <MdAddCircle className='text-2xl'/>Thêm
         </button>
         {isAdding &&
-            <div className="outline-1 rounded-lg lg:w-1/2 h-[420px] md:h-[760px] lg:h-[652px] overflow-y-auto p-2">
+            <div className="outline-1 rounded-lg lg:w-1/2 overflow-y-auto p-2 md:p-4 pb-8 flex flex-col gap-4">
                 {children}
             </div>}
     </div>
@@ -344,7 +500,7 @@ function AdminPage() {
         e.currentTarget.classList.toggle('bg-white');
     }
 
-    return <div className="h-screen bg-[#ccc]/50">
+    return <div className="min-h-screen bg-[#ccc]/50">
         {/*navigation bar*/}
         <nav className="relative p-2 md:px-4 flex bg-[#80CBC4]">
             <div>
@@ -423,7 +579,7 @@ function AdminPage() {
                     </div>
                 </SearchBar>
                 {/*Accounts list*/}
-                <div className="flex flex-col gap-2 md:gap-4">
+                <div className="flex flex-col lg:grid lg:grid-cols-3 gap-2 md:gap-4">
                     {searchedUsers.map((user, index) => <AccountSection key={index} roles={roles}
                                                                         user_data={user}>
                         <button onClick={() => {
@@ -451,66 +607,78 @@ function AdminPage() {
                     </div>
                 </SearchBar>
                 <CreationPart>
-                    <form action={createLaptop} className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor='Name'>Tên máy<span className='text-red-500'>*</span>:</label>
-                            <input type='text' id='Name' name='Name' className="outline-1 border-none rounded-lg p-2"
-                                   placeholder="Nhập tên máy ở đây..." required={true}/>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor='CPU'>Vi xử lý<span className='text-red-500'>*</span>:</label>
-                            <input type='text' id='CPU' name='CPU' className="outline-1 border-none rounded-lg p-2"
-                                   placeholder="Nhập thông tin vi xử lý ở đây..." required={true}/>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor='GPU'>GPU<span className='text-red-500'>*</span>:</label>
-                            <input type='text' id='GPU' name='GPU' className="outline-1 border-none rounded-lg p-2"
-                                   placeholder="Nhập thông tin card đồ họa ở đây..." required={true}/>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor='RAM'>RAM<span className='text-red-500'>*</span>:</label>
-                            <input type='number' id='RAM' name='RAM' className="outline-1 border-none rounded-lg p-2"
-                                   placeholder="Nhập dung lượng RAM ở đây..." required={true}/>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor='SSD'>SSD<span className='text-red-500'>*</span>:</label>
-                            <input type='number' id='SSD' name='SSD' className="outline-1 border-none rounded-lg p-2"
-                                   placeholder="Nhập dung lượng SSD ở đây..." required={true}/>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor='Screen'>Màn hình<span className='text-red-500'>*</span>:</label>
-                            <input type='text' id='Screen' name='Screen'
-                                   className="outline-1 border-none rounded-lg p-2"
-                                   placeholder="Nhập thông tin màn hình ở đây..." required={true}/>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor='Price'>Giá<span className='text-red-500'>*</span>:</label>
-                            <input type='number' id='Price' name='Price'
-                                   className="outline-1 border-none rounded-lg p-2"
-                                   placeholder="Nhập giá ở đây..." required={true}/>
-                        </div>
-                        <button type='submit'
-                                className="w-max outline-1 rounded-lg px-8 py-2 bg-[#FFB433] cursor-pointer hover:bg-[#80CBC4] hover:text-white active:bg-[#ccc]">Lưu
-                        </button>
-                    </form>
                     <div className="flex flex-col gap-2">
                         <label htmlFor='LaptopImage'
-                               className="outline-1 rounded-lg w-max mt-4 p-2 bg-[#FFB433] flex items-center gap-1 cursor-pointer hover:bg-[#80CBC4] hover:text-white active:bg-[#ccc]">Chọn
+                               className="outline-1 rounded-lg w-max p-2 bg-[#FFB433] flex items-center gap-1 cursor-pointer hover:bg-[#80CBC4] hover:text-white active:bg-[#ccc]">Chọn
                             ảnh laptop<MdUploadFile/></label>
                         <input onChange={e => setLaptopImageName(e.currentTarget?.files[0]?.name)} type='file'
                                id='LaptopImage' name='LaptopImage' ref={laptopImageRef} hidden={true}
                                required/>
                         {laptopImageName !== '' && <p>{laptopImageName}</p>}
                     </div>
+                    <form action={createLaptop} className="flex flex-col gap-4">
+                        <div className="flex flex-col md:flex-row md:items-center gap-2">
+                            <label htmlFor='Name' className='md:min-w-[80px]'>Tên máy<span
+                                className='text-red-500'>*</span>:</label>
+                            <input type='text' id='Name' name='Name'
+                                   className="w-full outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập tên máy ở đây..." required={true}/>
+                        </div>
+                        <div className="flex flex-col md:flex-row md:items-center gap-2">
+                            <label htmlFor='CPU' className='md:min-w-[48px]'>CPU<span className='text-red-500'>*</span>:</label>
+                            <input type='text' id='CPU' name='CPU'
+                                   className="w-full outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập thông tin CPU ở đây..." required={true}/>
+                        </div>
+                        <div className="flex flex-col md:flex-row md:items-center gap-2">
+                            <label htmlFor='GPU' className='md:min-w-[48px]'>GPU<span className='text-red-500'>*</span>:</label>
+                            <input type='text' id='GPU' name='GPU'
+                                   className="w-full outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập thông tin GPU ở đây..." required={true}/>
+                        </div>
+                        <div className="flex flex-col md:flex-row md:items-center gap-2">
+                            <label htmlFor='RAM' className='md:min-w-[196px]'>Dung lượng RAM (GB)<span
+                                className='text-red-500'>*</span>:</label>
+                            <input type='number' id='RAM' name='RAM'
+                                   className="w-full outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập dung lượng RAM ở đây..." required={true}/>
+                        </div>
+                        <div className="flex flex-col md:flex-row md:items-center gap-2">
+                            <label htmlFor='SSD' className='md:min-w-[192px]'>Dung lượng SSD (GB)<span
+                                className='text-red-500'>*</span>:</label>
+                            <input type='number' id='SSD' name='SSD'
+                                   className="w-full outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập dung lượng SSD ở đây..." required={true}/>
+                        </div>
+                        <div className="flex flex-col md:flex-row md:items-center gap-2">
+                            <label htmlFor='Screen' className='md:min-w-[92px]'>Màn hình<span
+                                className='text-red-500'>*</span>:</label>
+                            <input type='text' id='Screen' name='Screen'
+                                   className="w-full outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập thông tin màn hình ở đây..." required={true}/>
+                        </div>
+                        <div className="flex flex-col md:flex-row md:items-center gap-2">
+                            <label htmlFor='Price' className='md:min-w-[40px]'>Giá<span
+                                className='text-red-500'>*</span>:</label>
+                            <input type='number' id='Price' name='Price'
+                                   className="w-full outline-1 border-none rounded-lg p-2"
+                                   placeholder="Nhập giá ở đây..." required={true}/>
+                        </div>
+                        <button type='submit'
+                                className="w-max outline-1 rounded-lg px-8 py-2 bg-[#FFB433] self-center cursor-pointer hover:bg-[#80CBC4] hover:text-white active:bg-[#ccc]">Lưu
+                        </button>
+                    </form>
                 </CreationPart>
-                {searchedLaptops.map((laptop, index) => <LaptopSection key={index} laptop_data={laptop}>
-                    <button
-                        onClick={() => {
-                            deleteLaptop(laptop._id);
-                        }}
-                        className="outline-1 rounded-lg p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-red-500 active:bg-[#ccc]">
-                        <MdDelete/></button>
-                </LaptopSection>)}
+                <div className="lg:grid grid-cols-3">
+                    {searchedLaptops.map((laptop, index) => <LaptopSection key={index} laptop_data={laptop}>
+                        <button
+                            onClick={() => {
+                                deleteLaptop(laptop._id);
+                            }}
+                            className="outline-1 rounded-lg p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-red-500 active:bg-[#ccc]">
+                            <MdDelete/></button>
+                    </LaptopSection>)}
+                </div>
             </TabMain>}
             {tab === 'OrderTab' && <TabMain>Quản lý đơn hàng</TabMain>}
         </div>

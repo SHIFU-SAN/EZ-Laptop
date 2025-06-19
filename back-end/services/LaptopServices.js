@@ -49,11 +49,12 @@ class LaptopServices {
             FoundLaptop.Screen = new_info?.Screen;
         }
         if (new_info?.Image && new_info?.Image !== FoundLaptop?.Image) {
+
             if (FoundLaptop.Image !== '') {
-                fs.unlinkSync(FoundLaptop.Image);
-                FoundLaptop.Image = '/' + new_info?.Image.replace(/\\/g, '/');
+                await fs.unlinkSync('.' + FoundLaptop.Image);
+                FoundLaptop.Image = '/' + new_info.Image.replace(/\\/g, '/');
             } else {
-                FoundLaptop.Image = '/' + new_info?.Image.replace(/\\/g, '/');
+                FoundLaptop.Image = '/' + new_info.Image.replace(/\\/g, '/');
             }
         }
         if (new_info?.Price && new_info?.Price !== FoundLaptop?.Price) {
@@ -65,7 +66,7 @@ class LaptopServices {
 
     static async deleteLaptop(id) {
         const deletedLaptop = await Laptop.findByIdAndDelete(id);
-        fs.unlinkSync(deletedLaptop.Image);
+        fs.unlinkSync('.' + deletedLaptop.Image);
         return deletedLaptop;
     }
 }

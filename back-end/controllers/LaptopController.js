@@ -49,7 +49,7 @@ class LaptopController {
     static async setImage(req, res) {
         try {
             const SetLaptop = await LaptopServices.updateLaptop(req.body?.LaptopID, {Image: req?.file?.path});
-            return SetLaptop;
+            return res.status(200).json(SetLaptop);
         } catch (err) {
             console.log(`${DateServices.getTimeCurrent()} Can't set new image! Error: ${err.message}`);
             return res.status(400).send({

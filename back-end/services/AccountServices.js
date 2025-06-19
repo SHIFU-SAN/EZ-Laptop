@@ -50,9 +50,9 @@ class AccountServices {
         if (new_info?.Password && new_info.Password !== AccountFound.Password) {
             AccountFound.Password = new_info.Password;
         }
-        if (new_info?.Avatar && new_info.Avatar !== AccountFound.Avatar) {
+        if (new_info?.Avatar) {
             if (AccountFound.Avatar !== "/public/images/avatars/EmptyAvatar.png") {
-                fs.unlinkSync('.' + AccountFound.Avatar);
+                await fs.unlinkSync('.' + AccountFound.Avatar);
                 AccountFound.Avatar = '/' + new_info.Avatar.replace(/\\/g, '/');
             } else {
                 AccountFound.Avatar = '/' + new_info.Avatar.replace(/\\/g, '/');
@@ -68,6 +68,9 @@ class AccountServices {
 
     static async deleteAccount(id) {
         const AccountDeleted = await Account.findByIdAndDelete(id).exec();
+        if (AccountDeleted.Avatar !== "/public/images/avatars/EmptyAvatar.png") {
+            fs.unlinkSync(AccountDeleted.Avatar);
+        }
         return AccountDeleted;
     }
 }
