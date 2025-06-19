@@ -38,6 +38,15 @@ router
         },
         AccountController.checkPermission,
         OrderController.setOrder)
+    .put('/personal',
+        TokenController.checkToken,
+        (req, res, next) => {
+            req.permissions = ["set: own orders"];
+            return next();
+        },
+        AccountController.checkPermission,
+        OrderController.checkPersonalAuthority,
+        OrderController.setOrder)
     .delete('/',
         TokenController.checkToken,
         (req, res, next) => {
@@ -45,6 +54,15 @@ router
             return next();
         },
         AccountController.checkPermission,
+        OrderController.removeOrder)
+    .delete('/personal',
+        TokenController.checkToken,
+        (req, res, next) => {
+            req.permissions = ["remove: own orders"];
+            return next();
+        },
+        AccountController.checkPermission,
+        OrderController.checkPersonalAuthority,
         OrderController.removeOrder);
 
 module.exports = router;

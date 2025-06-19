@@ -1,10 +1,14 @@
+const AccountServices = require("../services/AccountServices");
 const DateServices = require("../services/DateServices");
+const LaptopServices = require("../services/LaptopServices");
 const OrderServices = require("../services/OrderServices");
 
 class OrderController {
     static async addOrder(req, res) {
         try {
             req.body['User'] = req?.user_id;
+            const FoundLaptop = await LaptopServices.findLaptopByID(req.body?.Laptop);
+            req.body['Total'] = FoundLaptop?.Price;
             const NewOrder = await OrderServices.createOrder(req.body);
             return res.status(201).json(NewOrder);
         } catch (err) {
@@ -39,6 +43,31 @@ class OrderController {
                 message: "Can't get orders by user!",
                 error: err.message
             })
+        }
+    }
+
+    static async checkPersonalAuthority(req, res, next) {
+        try {
+            const FoundOrder = await OrderServices.findOrderByID(req.body?.OrderID);
+            const FoundUser = await AccountServices.findAccountByID(req.user_id);
+            if (FoundOrder?.User !== FoundUser?._id) {
+                return res.status(403).send({
+                    message: "Forbidden!"
+                });
+            } else if (!FoundOrder?.Confirm) {
+                return res.status(403).send({
+                    message: "No more authority!",
+                    isAllowed: false
+                });
+            } else {
+                return next();
+            }
+        } catch (err) {
+            console.log(`${DateServices.getTimeCurrent()} Can't check personal assistant! Error: ${err.message}`);
+            return res.status(400).send({
+                message: "Can't check personal assistant!",
+                error: err.message
+            });
         }
     }
 

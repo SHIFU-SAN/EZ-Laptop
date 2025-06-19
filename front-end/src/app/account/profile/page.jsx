@@ -39,11 +39,10 @@ function ProfilePage() {
     const [isInfoEditing, setIsInfoEditing] = useState(false);
     const [avatarName, setAvatarName] = useState("");
 
-    async function getUserData(signal) {
+    async function getUserData() {
         try {
             await fetch(`${BASE_API}/account/personal`, {
-                credentials: 'include',
-                signal
+                credentials: 'include'
             })
                 .then(res => res.json())
                 .then(data => {
@@ -60,10 +59,7 @@ function ProfilePage() {
     }
 
     useEffect(() => {
-        const abortController = new AbortController();
-        const signal = abortController.signal;
-        getUserData(signal);
-        return () => abortController.abort();
+        getUserData();
     }, [])
 
     async function handleLogout() {

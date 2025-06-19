@@ -24,6 +24,10 @@ const orderSchema = new Schema({
         type: String,
         required: true
     },
+    Total: {
+        type: Number,
+        required: true
+    },
     Confirm: {
         type: Boolean,
         default: false

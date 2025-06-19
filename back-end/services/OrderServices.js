@@ -7,7 +7,8 @@ class OrderServices {
             Laptop: info?.Laptop,
             Receiver: info?.Receiver,
             Phone: info?.Phone,
-            Address: info?.Address
+            Address: info?.Address,
+            Total: info?.Total
         });
         await NewOrder.save();
         const FoundOrder = await Order
@@ -21,6 +22,11 @@ class OrderServices {
     static async findAllOrders() {
         const FoundOrders = await Order.find().populate('User').populate('Laptop').exec();
         return FoundOrders;
+    }
+
+    static async findOrderByID(id) {
+        const FoundOrder = await Order.findById(id);
+        return FoundOrder;
     }
 
     static async findOrdersByUser(user_id) {
@@ -44,6 +50,9 @@ class OrderServices {
         }
         if (new_info?.Address && new_info.Address !== FoundOrder?.Address) {
             FoundOrder.Address = new_info.Address;
+        }
+        if (new_info?.Total && new_info.Total !== FoundOrder?.Total) {
+            FoundOrder.Total = new_info.Total;
         }
         if (new_info?.Confirm && new_info.Confirm !== FoundOrder?.Confirm) {
             FoundOrder.Confirm = new_info.Confirm;

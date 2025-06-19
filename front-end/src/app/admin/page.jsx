@@ -263,6 +263,25 @@ function LaptopSection({className, children, laptop_data}) {
     </section>
 }
 
+function OrderSection({className, children, order_data}) {
+    const [order, setOrder] = useState(order_data);
+
+    return <section className={"flex flex-col gap-8 " + className}>
+        {/*overview*/}
+        <div>
+
+            {/*buttons*/}
+            <div>
+                {children}
+            </div>
+        </div>
+        {/*details*/}
+        <div></div>
+        {/*edit*/}
+        <div></div>
+    </section>
+}
+
 function CreationPart({className, children}) {
     const [isAdding, setIsAdding] = useState(false);
     return <div className={"flex flex-col gap-2 " + className}>
@@ -295,6 +314,9 @@ function AdminPage() {
     const [laptops, setLaptops] = useState([]);
     const [searchedLaptops, setSearchedLaptops] = useState([]);
     const [laptopImageName, setLaptopImageName] = useState('');
+    //state of order tab
+    const [orders, setOrders] = useState([]);
+    const [searchedOrders, setSearchedOrders] = useState([]);
 
     async function createLaptop(formData) {
         try {
@@ -345,7 +367,7 @@ function AdminPage() {
         }
     }
 
-    async function getAllLaptops(signal) {
+    async function getAllLaptops() {
         try {
             await fetch(`${BASE_API}/laptop/list`, {
                 credentials: 'include'
@@ -383,11 +405,25 @@ function AdminPage() {
         }
     }
 
-    async function getUserData(signal) {
+    async function getAllOrders() {
+        try {
+            await fetch(`${BASE_API}/order/list`, {
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setOrders(data);
+                    setSearchedOrders(data);
+                });
+        } catch (err) {
+            console.error(`Can't get all orders! Error: ${err}`);
+        }
+    }
+
+    async function getUserData() {
         try {
             await fetch(`${BASE_API}/account/personal`, {
-                credentials: 'include',
-                signal
+                credentials: 'include'
             })
                 .then(res => res.json())
                 .then(data => {
@@ -403,7 +439,7 @@ function AdminPage() {
         }
     }
 
-    async function getAllUsers(signal) {
+    async function getAllUsers() {
         try {
             await fetch(`${BASE_API}/account`, {
                 credentials: 'include'
@@ -412,7 +448,7 @@ function AdminPage() {
                 .then(data => {
                     setUsers(data);
                     setSearchedUsers(data);
-                })
+                });
         } catch (err) {
             console.error(`Can't get all users! Error: ${err.message}`);
         }
@@ -441,7 +477,7 @@ function AdminPage() {
         }
     }
 
-    async function getAllRoles(signal) {
+    async function getAllRoles() {
         try {
             await fetch(`${BASE_API}/role`, {
                 credentials: 'include'
@@ -454,13 +490,11 @@ function AdminPage() {
     }
 
     useEffect(() => {
-        const abortController = new AbortController();
-        const signal = abortController.signal;
-        getAllLaptops(signal);
-        getUserData(signal);
-        getAllUsers(signal);
-        getAllRoles(signal);
-        return () => abortController.abort();
+        getUserData();
+        getAllLaptops();
+        getAllOrders();
+        getAllRoles();
+        getAllUsers();
     }, []);
 
     async function handleLogout() {

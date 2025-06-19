@@ -68,7 +68,8 @@ function OrderPage() {
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data);
+                    alert("Đặt hàng thành công!");
+                    router.replace("/account/profile");
                 });
         } catch (err) {
             console.log(`Can't order laptop! Error: ${err.message}`);
