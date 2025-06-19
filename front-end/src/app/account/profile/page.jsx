@@ -5,11 +5,26 @@ import {useState, useEffect, useRef} from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
-import {MdCreate, MdShoppingCart, MdContentPaste, MdLogout, MdPerson, MdUploadFile} from "react-icons/md";
+import {
+    MdCreate,
+    MdShoppingCart,
+    MdContentPaste,
+    MdLogout,
+    MdPerson,
+    MdUploadFile,
+    MdEdit,
+    MdDelete, MdManageSearch, MdVisibility
+} from "react-icons/md";
 
 import Logo from "../../../../public/images/logos/EZ-Laptop-logo.png";
 
 const BASE_API = "http://localhost:3080";
+
+function SearchBar({className, children}) {
+    return <div className={" " + className}>
+        {children}
+    </div>
+}
 
 function TabHeader({onClick, className, children, isDisabled}) {
     return <li onClick={onClick}
@@ -22,6 +37,119 @@ function TabHeader({onClick, className, children, isDisabled}) {
 function TabMain({children, className}) {
     return <main
         className={"w-full p-2 md:p-4 rounded-tr-lg md:rounded-tl-lg rounded-b-lg bg-white shadow-md " + className}>{children}</main>
+}
+
+function OrderSection({children, className, order_data}) {
+    const [isEditing, setIsEditing] = useState(false);
+    const [order, setOrder] = useState(order_data);
+    const [laptopImage, setLaptopImage] = useState(BASE_API + order_data?.Laptop?.Image);
+    const [isReading, setIsReading] = useState(false);
+
+    async function updateOrder(formData) {
+        try {
+            await fetch(`${BASE_API}/order/personal`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({
+                    OrderID: order_data._id,
+                    Phone: formData.get('Phone'),
+                    Receiver: formData.get('Receiver'),
+                    Address: formData.get('Address')
+                }),
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setOrder(data);
+                    alert("Cập nhật đơn hàng thành công. ^-^");
+                });
+        } catch (err) {
+            console.error(`Can't update order! Error: ${err.message}`);
+        }
+    }
+
+    return <section className="outline-1 rounded-lg p-2 flex flex-col gap-8">
+        {/*overview*/}
+        <div>
+            <div className="flex items-center gap-2">
+                <div className="relative min-w-[48px] md:min-w-[60px] size-[48px] md:size-[60px]">
+                    <Image
+                        src={laptopImage}
+                        alt="Laptop image"
+                        fill={true}
+                        sizes="(max-width: 768px) 48px, (max-width: 1200px) 60px, 60px"
+                        className="object-cover rounded-full"
+                    />
+                </div>
+                <div className='w-full'>
+                    <h2 className='font-medium'>{order.Laptop.Name}</h2>
+                    <p className="font-bold text-[#80CBC4]">{new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    }).format(order.Total)}</p>
+                </div>
+                {/*buttons*/}
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setIsReading(!isReading)}
+                        className="outline-1 rounded-lg md:ml-4 p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-[#80CBC4] hover:text-whtie active:bg-[#B4EBE6] active:text-white">
+                        <MdVisibility/></button>
+                    {!order_data?.Confirm && <button
+                        onClick={() => setIsEditing(!isEditing)}
+                        className="outline-1 rounded-lg p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-[#80CBC4] hover:text-whtie active:bg-[#B4EBE6] active:text-white">
+                        <MdCreate/></button>}
+                    {!order_data?.Confirm && children}
+                </div>
+            </div>
+            <p className="text-end italic underline">{order?.Confirm ?
+                <span className='font-medium'>Đã xác nhận</span> : "Chờ xác nhận"}</p>
+        </div>
+
+        {
+            /*Details*/
+            isReading && <ul>
+                <li className="flex gap-2">
+                    <h3 className='font-medium'>Số điện thoại:</h3>
+                    <p>{order.Phone}</p>
+                </li>
+                <li className="flex gap-2">
+                    <h3 className='font-medium'>Người nhận:</h3>
+                    <p>{order.Receiver}</p>
+                </li>
+                <li className="flex gap-2">
+                    <h3 className='font-medium'>Địa chỉ:</h3>
+                    <p>{order.Address}</p>
+                </li>
+
+            </ul>
+        }
+        {
+            /*Edit*/
+            isEditing && <form action={updateOrder} className="outline-1 rounded-lg p-2 flex flex-col gap-4">
+                <div className="flex flex-col md:flex-row md:items-center gap-2">
+                    <label htmlFor='Phone' className="md:min-w-[172px] flex items-center gap-1">Số điện thoại mới:<MdEdit/></label>
+                    <input type='tel' id='Phone' name='Phone' className="w-full outline-1 border-none rounded-lg p-2"
+                           placeholder="Nhập số điện thoại mới ở đây..."/>
+                </div>
+                <div className="flex flex-col md:flex-row md:items-center gap-2">
+                    <label htmlFor='Receiver' className="min-w-[160px] flex items-center gap-1">Người nhận
+                        mới:<MdEdit/></label>
+                    <input type='text' id='Receiver' name='Receiver' className="w-full outline-1 border-none rounded-lg p-2"
+                           placeholder="Nhập tên người nhận mới ở đây..."/>
+                </div>
+                <div className="flex flex-col md:flex-row md:items-center gap-2">
+                    <label htmlFor='Address' className="min-w-[120px] flex items-center gap-1">Địa chỉ mới:<MdEdit/></label>
+                    <input type='text' id='Addres' name='Address' className="w-full outline-1 border-none rounded-lg p-2"
+                           placeholder="Nhập địa chỉ mới ở đây..."/>
+                </div>
+                <button type='submit'
+                        className="w-max outline-1 rounded-lg px-8 py-2 bg-[#FFB433] font-medium self-center cursor-pointer hover:bg-[#80CBC4] hover:text-[#FBF8EF] active:bg-[#ccc]">Lưu
+                </button>
+            </form>
+        }
+    </section>
 }
 
 function ProfilePage() {
@@ -38,6 +166,9 @@ function ProfilePage() {
     const [user, setUser] = useState({});
     const [isInfoEditing, setIsInfoEditing] = useState(false);
     const [avatarName, setAvatarName] = useState("");
+    // state of order tab
+    const [orders, setOrders] = useState([]);
+    const [searchedOrders, setSearchedOrders] = useState([]);
 
     async function getUserData() {
         try {
@@ -55,26 +186,6 @@ function ProfilePage() {
                 });
         } catch (err) {
             console.error(`Can't get user data! Error: ${err.message}`);
-        }
-    }
-
-    useEffect(() => {
-        getUserData();
-    }, [])
-
-    async function handleLogout() {
-        try {
-            await fetch(`${BASE_API}/account/logout`, {
-                credentials: 'include'
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data?.message) {
-                        router.replace('/');
-                    }
-                });
-        } catch (err) {
-            console.error(`Can't logout! Error: ${err.message}`);
         }
     }
 
@@ -112,6 +223,65 @@ function ProfilePage() {
             alert("Cập tài khoản thành công. ^-^");
         } catch (err) {
             console.error(`Can't update info! Error: ${err.message}`);
+        }
+    }
+
+    async function getAllOrders() {
+        try {
+            await fetch(`${BASE_API}/order/personal`, {
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setOrders(data);
+                    setSearchedOrders(data);
+                });
+        } catch (err) {
+            console.error(`Can't get all orders! Error: ${err.message}`);
+        }
+    }
+
+    async function deleteOrder(id) {
+        try {
+            await fetch(`${BASE_API}/order/personal`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({
+                    OrderID: id
+                }),
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setOrders(orders.filter(order => order._id !== data._id));
+                    setSearchedOrders(searchedOrders.filter(order => order._id !== data._id));
+                    alert("Xóa đơn đặt hàng thành công. ^-^");
+                })
+        } catch (err) {
+            console.error(`Can't delete order! Error: ${err}`);
+        }
+    }
+
+    useEffect(() => {
+        getUserData();
+        getAllOrders();
+    }, [])
+
+    async function handleLogout() {
+        try {
+            await fetch(`${BASE_API}/account/logout`, {
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data?.message) {
+                        router.replace('/');
+                    }
+                });
+        } catch (err) {
+            console.error(`Can't logout! Error: ${err.message}`);
         }
     }
 
@@ -252,7 +422,34 @@ function ProfilePage() {
                 </div>}
             </TabMain>}
             {tab === 'CartTab' && <TabMain>Giỏ hàng</TabMain>}
-            {tab === 'OrderTab' && <TabMain>Đơn hàng</TabMain>}
+            {tab === 'OrderTab' && <TabMain className="flex flex-col gap-4 md:gap-8">
+                <SearchBar>
+                    <div className="flex items-center gap-2">
+                        <label htmlFor='Username' className='text-4xl'><MdManageSearch/></label>
+                        <input
+                            onChange={e => {
+                                if (e.currentTarget.value !== '') {
+                                    setSearchedOrders(orders.filter(order => order?.Laptop.Name.toLowerCase().includes(e.currentTarget.value.toLowerCase())))
+                                } else {
+                                    setSearchedOrders(orders);
+                                }
+                            }}
+                            type='search' id='Username'
+                            className="w-full lg:w-1/2 outline-1 border-none rounded-lg p-2"
+                            placeholder="Tìm đơn theo tên laptop?"/>
+                    </div>
+                </SearchBar>
+                <div className="flex flex-col lg:grid grid-cols-3 gap-2 md:gap-4">
+                    {searchedOrders.map((order, index) => <OrderSection key={index} order_data={order}>
+                        <button
+                            onClick={() => {
+                                deleteOrder(order._id);
+                            }}
+                            className="outline-1 rounded-lg p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-red-500 active:bg-[#ccc]">
+                            <MdDelete/></button>
+                    </OrderSection>)}
+                </div>
+            </TabMain>}
         </div>
     </div>
 }

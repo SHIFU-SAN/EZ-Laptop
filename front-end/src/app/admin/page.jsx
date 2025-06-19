@@ -537,6 +537,29 @@ function AdminPage() {
         }
     }
 
+    async function deleteOrder(id) {
+        try {
+            await fetch(`${BASE_API}/order`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({
+                    OrderID: id
+                }),
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setOrders(orders.filter(order => order._id !== data._id));
+                    setSearchedOrders(searchedOrders.filter(order => order._id !== data._id));
+                    alert("Xóa đơn đặt hàng thành công. ^-^");
+                })
+        } catch (err) {
+            console.error(`Can't delete order! Error: ${err.message}`);
+        }
+    }
+
     async function getUserData() {
         try {
             await fetch(`${BASE_API}/account/personal`, {
@@ -726,7 +749,7 @@ function AdminPage() {
                                 setSearchedUsers(users);
                             }
                         }} type='search' id='Username' className="w-full lg:w-1/2 outline-1 border-none rounded-lg p-2"
-                               placeholder="Tìm kiếm tên tài khoản?"/>
+                               placeholder="Tìm kiếm tài khoản theo tên?"/>
                     </div>
                 </SearchBar>
                 {/*Accounts list*/}
@@ -836,7 +859,13 @@ function AdminPage() {
                     <div className="flex items-center gap-2">
                         <label htmlFor='Username' className='text-4xl'><MdManageSearch/></label>
                         <input
-                            onChange={e => setSearchedOrders(orders.filter(order => order?.Phone === e.currentTarget.value))}
+                            onChange={e => {
+                                if (e.currentTarget.value !== '') {
+                                    setSearchedOrders(orders.filter(order => order?.Phone.includes(e.currentTarget.value)))
+                                } else {
+                                    setSearchedOrders(orders);
+                                }
+                            }}
                             type='search' id='Username'
                             className="w-full lg:w-1/2 outline-1 border-none rounded-lg p-2"
                             placeholder="Tìm đơn theo số điện thoại?"/>
@@ -846,6 +875,9 @@ function AdminPage() {
                 <div className="flex flex-col lg:grid grid-cols-3 gap-2 md:gap-4">
                     {searchedOrders.map((order, index) => <OrderSection key={index} order_data={order}>
                         <button
+                            onClick={() => {
+                                deleteOrder(order._id);
+                            }}
                             className="outline-1 rounded-lg p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-red-500 active:bg-[#ccc]">
                             <MdDelete/></button>
                     </OrderSection>)}

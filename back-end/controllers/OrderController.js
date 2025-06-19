@@ -50,11 +50,12 @@ class OrderController {
         try {
             const FoundOrder = await OrderServices.findOrderByID(req.body?.OrderID);
             const FoundUser = await AccountServices.findAccountByID(req.user_id);
-            if (FoundOrder?.User !== FoundUser?._id) {
+            if (FoundOrder?.User.toString() !== FoundUser?._id.toString()) {
+                console.log(1)
                 return res.status(403).send({
                     message: "Forbidden!"
                 });
-            } else if (!FoundOrder?.Confirm) {
+            } else if (FoundOrder?.Confirm) {
                 return res.status(403).send({
                     message: "No more authority!",
                     isAllowed: false
