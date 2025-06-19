@@ -170,7 +170,7 @@ function LaptopSection({className, children, laptop_data}) {
                     src={image}
                     alt="Laptop image"
                     fill={true}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="(max-width: 768px) 48px, (max-width: 1200px) 60px, 60px"
                     className="object-cover rounded-full"
                 />
             </div>
@@ -264,21 +264,138 @@ function LaptopSection({className, children, laptop_data}) {
 }
 
 function OrderSection({className, children, order_data}) {
+    const [isEditing, setIsEditing] = useState(false);
     const [order, setOrder] = useState(order_data);
+    const [isReading, setIsReading] = useState(false);
+    const [userAvatar, setUserAvatar] = useState(BASE_API + order_data.User?.Avatar);
 
-    return <section className={"flex flex-col gap-8 " + className}>
+    async function updateInfo(formData) {
+        try {
+            await fetch(`${BASE_API}/order`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({
+                    OrderID: order_data._id,
+                    Phone: formData.get('Phone'),
+                    Receiver: formData.get('Receiver'),
+                    Address: formData.get('Address')
+                }),
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setOrder(data);
+                    setIsEditing(!isEditing);
+                    alert("Cập nhật đơn đặt hàng thành công!");
+                });
+        } catch (err) {
+            console.error(`Can't update order info! Error: ${err.message}`);
+        }
+    }
+
+    async function updateStatus(e) {
+        try {
+            await fetch(`${BASE_API}/order`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify({
+                    OrderID: order_data._id,
+                    Confirm: e.currentTarget.checked.toString()
+                }),
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .then(data => setOrder(data));
+        } catch (err) {
+            console.error(`Can't update status of order! Error: ${err.message}`);
+        }
+    }
+
+    return <section className={"outline-1 rounded-lg p-2 flex flex-col gap-8 " + className}>
         {/*overview*/}
-        <div>
-
+        <div className="flex items-center gap-2">
+            <input
+                key={order.Confirm}
+                onChange={updateStatus}
+                type='checkbox'
+                id='Confirmation'
+                name='Confirmation'
+                defaultChecked={order.Confirm}
+            />
+            <div className="relative min-w-[48px] md:min-w-[60px] size-[48px] md:size-[60px]">
+                <Image
+                    src={userAvatar}
+                    alt="User avatar"
+                    fill={true}
+                    sizes="(max-width: 768px) 48px, (max-width: 1200px) 60px, 60px"
+                    className="object-cover rounded-full"
+                />
+            </div>
+            <div className='w-full'>
+                <h2 className='font-medium'>{order.User?.Username}</h2>
+                <p className="font-bold text-[#80CBC4]">{new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(order.Total)}</p>
+            </div>
             {/*buttons*/}
-            <div>
+            <div className="flex items-center gap-2">
+                <button
+                    onClick={() => setIsReading(!isReading)}
+                    className="outline-1 rounded-lg md:ml-4 p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-[#80CBC4] hover:text-whtie active:bg-[#B4EBE6] active:text-white">
+                    <MdVisibility/></button>
+                <button
+                    onClick={() => setIsEditing(!isEditing)}
+                    className="outline-1 rounded-lg p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-[#80CBC4] hover:text-whtie active:bg-[#B4EBE6] active:text-white">
+                    <MdCreate/></button>
                 {children}
             </div>
         </div>
-        {/*details*/}
-        <div></div>
-        {/*edit*/}
-        <div></div>
+        {
+            /*Details*/
+            isReading && <ul>
+                <li className="flex items-center gap-2">
+                    <h3 className='font-medium'>Số điện thoại:</h3>
+                    <p>{order.Phone}</p>
+                </li>
+                <li className="flex items-center gap-2">
+                    <h3 className='font-medium'>Người nhận:</h3>
+                    <p>{order.Receiver}</p>
+                </li>
+                <li className="flex items-center gap-2">
+                    <h3 className='font-medium'>Địa chỉ:</h3>
+                    <p>{order.Address}</p>
+                </li>
+            </ul>
+        }
+        {
+            /*Edit*/
+            isEditing && <form action={updateInfo} className="outline-1 rounded-lg p-2 flex flex-col gap-4">
+                <div className="flex flex-col md:flex-row md:items-center gap-2">
+                    <label htmlFor='Phone' className="md:min-w-[172px] flex items-center gap-1">Số điện thoại mới:<MdEdit/></label>
+                    <input type='tel' id='Phone' name='Phone' className="w-full outline-1 border-none rounded-lg p-2"
+                           placeholder="Nhập số điện thoại mới ở đây..."/>
+                </div>
+                <div className="flex flex-col md:flex-row md:items-center gap-2">
+                    <label htmlFor='Receiver' className="min-w-[160px] flex items-center gap-1">Người nhận
+                        mới:<MdEdit/></label>
+                    <input type='text' id='Receiver' name='Receiver' className="w-full outline-1 border-none rounded-lg p-2"
+                           placeholder="Nhập tên người nhận mới ở đây..."/>
+                </div>
+                <div className="flex flex-col md:flex-row md:items-center gap-2">
+                    <label htmlFor='Address' className="min-w-[120px] flex items-center gap-1">Địa chỉ mới:<MdEdit/></label>
+                    <input type='text' id='Addres' name='Address' className="w-full outline-1 border-none rounded-lg p-2"
+                           placeholder="Nhập địa chỉ mới ở đây..."/>
+                </div>
+                <button type='submit'
+                        className="w-max outline-1 rounded-lg px-8 py-2 bg-[#FFB433] font-medium self-center cursor-pointer hover:bg-[#80CBC4] hover:text-[#FBF8EF] active:bg-[#ccc]">Lưu
+                </button>
+            </form>
+        }
     </section>
 }
 
@@ -597,7 +714,7 @@ function AdminPage() {
                            isDisabled={tab === 'OrderTab'}><MdAssignmentTurnedIn
                     className='text-lg md:text-xl'/><h2 className="hidden md:inline">Đơn hàng</h2></TabHeader>
             </ul>
-            {tab === 'AccountTab' && <TabMain className="flex flex-col gap-4">
+            {tab === 'AccountTab' && <TabMain className="flex flex-col gap-4 md:gap-8">
                 {/*search bar for accounts*/}
                 <SearchBar className="flex flex-col gap-4">
                     <div className="flex items-center gap-2">
@@ -626,7 +743,7 @@ function AdminPage() {
             </TabMain>}
             {tab === 'CPU_Tab' && <TabMain>Quản lý CPU</TabMain>}
             {tab === 'GPU_Tab' && <TabMain>Quản lý GPU</TabMain>}
-            {tab === 'LaptopTab' && <TabMain className="flex flex-col gap-4">
+            {tab === 'LaptopTab' && <TabMain className="flex flex-col gap-4 md:gap-8">
                 <SearchBar>
                     <div className="flex items-center gap-2">
                         <label htmlFor='Username' className='text-4xl'><MdManageSearch/></label>
@@ -703,7 +820,7 @@ function AdminPage() {
                         </button>
                     </form>
                 </CreationPart>
-                <div className="lg:grid grid-cols-3">
+                <div className="flex flex-col lg:grid grid-cols-3 gap-2 md:gap-4">
                     {searchedLaptops.map((laptop, index) => <LaptopSection key={index} laptop_data={laptop}>
                         <button
                             onClick={() => {
@@ -714,7 +831,26 @@ function AdminPage() {
                     </LaptopSection>)}
                 </div>
             </TabMain>}
-            {tab === 'OrderTab' && <TabMain>Quản lý đơn hàng</TabMain>}
+            {tab === 'OrderTab' && <TabMain className="flex flex-col gap-4 md:gap-8">
+                <SearchBar>
+                    <div className="flex items-center gap-2">
+                        <label htmlFor='Username' className='text-4xl'><MdManageSearch/></label>
+                        <input
+                            onChange={e => setSearchedOrders(orders.filter(order => order?.Phone === e.currentTarget.value))}
+                            type='search' id='Username'
+                            className="w-full lg:w-1/2 outline-1 border-none rounded-lg p-2"
+                            placeholder="Tìm đơn theo số điện thoại?"/>
+                    </div>
+                </SearchBar>
+                {/*Orders list*/}
+                <div className="flex flex-col lg:grid grid-cols-3 gap-2 md:gap-4">
+                    {searchedOrders.map((order, index) => <OrderSection key={index} order_data={order}>
+                        <button
+                            className="outline-1 rounded-lg p-2 bg-[#FFB433] text-white cursor-pointer hover:bg-red-500 active:bg-[#ccc]">
+                            <MdDelete/></button>
+                    </OrderSection>)}
+                </div>
+            </TabMain>}
         </div>
     </div>
 }
