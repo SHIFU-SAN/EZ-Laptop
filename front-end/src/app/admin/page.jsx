@@ -192,7 +192,7 @@ function LaptopSection({className, children, laptop_data}) {
                 <li className="flex gap-2"><h4 className='font-medium'>GPU:</h4><p>{laptop?.GPU}</p></li>
                 <li className="flex items-center gap-2"><h4 className='font-medium'>RAM:</h4><p>{laptop?.RAM}GB</p></li>
                 <li className="flex items-center gap-2"><h4 className='font-medium'>SSD:</h4>
-                    <p>{laptop?.SSD > 1000 ? laptop?.SSD / 1000 + 'TB' : laptop?.SSD + 'GB'}</p></li>
+                    <p>{laptop?.SSD >= 1000 ? laptop?.SSD / 1000 + 'TB' : laptop?.SSD + 'GB'}</p></li>
                 <li className="flex gap-2"><h4 className='font-medium'>Màn hình:</h4><p>{laptop?.Screen}</p>
                 </li>
                 <li className="flex items-center gap-2"><h4 className='font-medium'>Giá:</h4><p
