@@ -1,7 +1,7 @@
 "use client";
 "use strict";
 
-import {useEffect, useState} from 'react';
+import {useEffect, useState, Suspense} from 'react';
 import Image from "next/image";
 import {useSearchParams, useRouter} from "next/navigation";
 
@@ -106,7 +106,8 @@ function OrderPage() {
                 </div>
                 <div className="flex flex-col gap-2">
                     <label htmlFor='Receiver'>Người nhận<span className='text-red-500'>*</span>:</label>
-                    <input type='text' id='Receiver' name='Receiver' className="outline-1 border-none rounded-lg p-2"
+                    <input type='text' id='Receiver' name='Receiver'
+                           className="outline-1 border-none rounded-lg p-2"
                            placeholder="Nhập họ tên ở đây..." required/>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -123,4 +124,10 @@ function OrderPage() {
     </div>
 }
 
-export default OrderPage;
+function OrderSuspense() {
+    return <Suspense>
+        <OrderPage/>
+    </Suspense>
+}
+
+export default OrderSuspense;
