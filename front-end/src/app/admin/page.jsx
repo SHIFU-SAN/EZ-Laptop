@@ -359,6 +359,10 @@ function OrderSection({className, children, order_data}) {
             /*Details*/
             isReading && <ul>
                 <li className="flex items-center gap-2">
+                    <h3 className='font-medium'>Laptop:</h3>
+                    <p>{order.Laptop?.Name}</p>
+                </li>
+                <li className="flex items-center gap-2">
                     <h3 className='font-medium'>Số điện thoại:</h3>
                     <p>{order.Phone}</p>
                 </li>
